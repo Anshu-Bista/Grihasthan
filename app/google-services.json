@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "830654721976",
+    "firebase_url": "https://rentalfinder-ff5e6-default-rtdb.firebaseio.com",
+    "project_id": "rentalfinder-ff5e6",
+    "storage_bucket": "rentalfinder-ff5e6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:830654721976:android:7901e3a23265c25d24694d",
+        "android_client_info": {
+          "package_name": "com.example.rentalfinder"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCK2xAnNQtVaO8ZMo2RYMSWOp8vkgB420A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

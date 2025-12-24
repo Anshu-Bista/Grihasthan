@@ -44,9 +44,9 @@ fun DashboardBody(){
     var selectedIndex by remember { mutableStateOf(0) }
 
     val listItems = listOf(
-        NavItem(label = "Home", R.drawable.),
+        NavItem(label = "Home", R.drawable.home),
         NavItem(label = "Search", R.drawable.baseline_search_24),
-        NavItem(label = "Notification", R.drawable.baseline_notifications_24),
+        NavItem(label = "Notification", R.drawable.baseline_favorite_24),
         NavItem(label = "Profile", R.drawable.baseline_person_24)
     )
     Scaffold (

@@ -58,10 +58,10 @@ class CommonRepoImpl: CommonRepo {
 
 
     override fun getFileNameFromUri(
-        context: Context, uri: Uri
+        context: Context, imageUri: Uri
     ): String? {
         var fileName: String? = null
-        val cursor: Cursor? = context.contentResolver.query(uri, null, null, null, null)
+        val cursor: Cursor? = context.contentResolver.query(imageUri, null, null, null, null)
         cursor?.use {
             if (it.moveToFirst()) {
                 val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)

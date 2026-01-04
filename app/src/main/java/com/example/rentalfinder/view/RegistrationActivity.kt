@@ -34,6 +34,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -65,6 +66,7 @@ import com.example.rentalfinder.ui.theme.Gold
 import com.example.rentalfinder.ui.theme.MintGreen
 import com.example.rentalfinder.ui.theme.OffWhite
 import com.example.rentalfinder.ui.theme.Purple80
+import com.example.rentalfinder.ui.theme.RentalFinderTheme
 import com.example.rentalfinder.ui.theme.SandBiege
 import com.example.rentalfinder.ui.theme.White
 import com.example.rentalfinder.viewmodel.UserViewModel
@@ -77,7 +79,9 @@ class RegistrationActivity : ComponentActivity() {
             RegistrationBody()
         }
     }
+
 }
+
 
 @Composable
 fun RegistrationBody(){

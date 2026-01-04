@@ -15,9 +15,10 @@ fun NumberField(
     FormField(
         label = label,
         value = value,
-        onValueChange = {
-            if (it.all { char -> char.isDigit() }) {
-                onValueChange(it)
+        onValueChange = { input ->
+            val filtered = input.filter { it.isDigit() }
+            if (filtered.length <= maxDigits) {
+                onValueChange(filtered)
             }
         },
         keyboardType = KeyboardType.Number,

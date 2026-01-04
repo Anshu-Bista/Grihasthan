@@ -30,6 +30,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -42,13 +43,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.rentalfinder.utils.ImageUtils
-import com.example.rentalfinder.view.ui.theme.RentalFinderTheme
 import com.example.rentalfinder.R
-import com.example.rentalfinder.ui.theme.DarkGrey
 import com.example.rentalfinder.ui.theme.ForestGreen
 import com.example.rentalfinder.ui.theme.MintGreen
-import com.example.rentalfinder.ui.theme.OffWhite
-import com.example.rentalfinder.ui.theme.SandBiege
 import com.example.rentalfinder.view.components.DescriptionField
 import com.example.rentalfinder.view.components.FormField
 import com.example.rentalfinder.view.components.NumberField
@@ -78,6 +75,7 @@ fun AddBody(
     onPickImage: () -> Unit
 ){
 
+
     var title by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
     var totalArea by remember { mutableStateOf("") }
@@ -93,9 +91,8 @@ fun AddBody(
     var kitchen by rememberSaveable { mutableStateOf("") }
 
 
-    Scaffold { innerPadding->
+    Scaffold(containerColor = MintGreen) { innerPadding->
         LazyColumn(modifier = Modifier.fillMaxSize()
-            .background(color = MintGreen)
             .padding(innerPadding)
         ) {
            item {
@@ -148,7 +145,8 @@ fun AddBody(
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalAlignment = Alignment.Top
                     ) {
                         NumberField(
                             label = "Price per month (NPR)",
@@ -199,6 +197,7 @@ fun AddBody(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
+                        //Bedroom
                         NumberField(
                             label = "Bedroom",
                             value = bedroom,
@@ -206,6 +205,7 @@ fun AddBody(
                             modifier = Modifier.weight(1f)
                         );
 
+                        //Bathroom
                         NumberField(
                             label = "Bathroom",
                             value = bathroom,
@@ -213,6 +213,7 @@ fun AddBody(
                             modifier = Modifier.weight(1f)
                         );
 
+                        //Kitchen
                         NumberField(
                             label = "Kitchen",
                             value = kitchen,

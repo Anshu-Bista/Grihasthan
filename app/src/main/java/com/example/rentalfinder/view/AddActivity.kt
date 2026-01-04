@@ -6,31 +6,52 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.rentalfinder.utils.ImageUtils
 import com.example.rentalfinder.view.ui.theme.RentalFinderTheme
-
 import com.example.rentalfinder.R
+import com.example.rentalfinder.ui.theme.DarkGrey
+import com.example.rentalfinder.ui.theme.ForestGreen
+import com.example.rentalfinder.ui.theme.MintGreen
+import com.example.rentalfinder.ui.theme.OffWhite
+import com.example.rentalfinder.ui.theme.SandBiege
+import com.example.rentalfinder.view.components.DescriptionField
+import com.example.rentalfinder.view.components.FormField
+import com.example.rentalfinder.view.components.NumberField
 
 class AddActivity : ComponentActivity() {
     lateinit var imageUtils: ImageUtils
@@ -56,8 +77,25 @@ fun AddBody(
     selectedImageUri: Uri?,
     onPickImage: () -> Unit
 ){
+
+    var title by remember { mutableStateOf("") }
+    var price by remember { mutableStateOf("") }
+    var totalArea by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var location by remember { mutableStateOf("") }
+    var streetAddress by remember { mutableStateOf("") }
+    var zipCode by remember { mutableStateOf("") }
+    var yearBuilt by remember { mutableStateOf("") }
+    var levels by remember { mutableStateOf("") }
+
+    var bedroom by rememberSaveable { mutableStateOf("") }
+    var bathroom by rememberSaveable { mutableStateOf("") }
+    var kitchen by rememberSaveable { mutableStateOf("") }
+
+
     Scaffold { innerPadding->
         LazyColumn(modifier = Modifier.fillMaxSize()
+            .background(color = MintGreen)
             .padding(innerPadding)
         ) {
            item {
@@ -90,6 +128,102 @@ fun AddBody(
                    }
                }
            }
+            item {
+                Column (modifier = Modifier.padding(30.dp)){
+                    Text("Basic Property Details",style = TextStyle(
+                            fontSize = 22.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = ForestGreen,
+                        textAlign = TextAlign.Center
+                    ));
+
+                    //Title
+                    FormField(
+                        label = "Property Title",
+                        value = title,
+                        onValueChange = { title = it },
+                        placeholder = "e.g. 2BHK Apartment in Baneshwor"
+                    )
+
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        NumberField(
+                            label = "Price per month (NPR)",
+                            value = price,
+                            onValueChange = { price = it },
+                            maxDigits = 7, // adjust as needed
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        NumberField(
+                            label = "Total Area (sq.m)",
+                            value = totalArea,
+                            onValueChange = { totalArea = it },
+                            maxDigits = 5,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+
+                    DescriptionField(
+                        label = "Description",
+                        value = description,
+                        onValueChange = { description = it }
+                    )
+
+                }
+            }
+
+            item {
+                Column(modifier = Modifier.padding(30.dp)
+                ){
+                    //Year Built
+                    NumberField(
+                        label = "Year Built (B.S.)",
+                        value = yearBuilt,
+                        onValueChange = { yearBuilt = it },
+                        maxDigits = 4
+                    )
+
+                    //Number of Levels
+                    NumberField(
+                        label = "Number of Levels",
+                        value = levels,
+                        onValueChange = { levels = it },
+                        modifier = Modifier.fillMaxWidth()
+                    );
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        NumberField(
+                            label = "Bedroom",
+                            value = bedroom,
+                            onValueChange = { bedroom = it },
+                            modifier = Modifier.weight(1f)
+                        );
+
+                        NumberField(
+                            label = "Bathroom",
+                            value = bathroom,
+                            onValueChange = { bathroom = it },
+                            modifier = Modifier.weight(1f)
+                        );
+
+                        NumberField(
+                            label = "Kitchen",
+                            value = kitchen,
+                            onValueChange = { kitchen = it },
+                            modifier = Modifier.weight(1f)
+                        );
+                    }
+
+                }
+
+            }
         }
     }
 

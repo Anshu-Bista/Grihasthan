@@ -46,6 +46,7 @@ import com.example.rentalfinder.utils.ImageUtils
 import com.example.rentalfinder.R
 import com.example.rentalfinder.ui.theme.ForestGreen
 import com.example.rentalfinder.ui.theme.MintGreen
+import com.example.rentalfinder.view.components.AmenitiesChips
 import com.example.rentalfinder.view.components.CommonDropdown
 import com.example.rentalfinder.view.components.DescriptionField
 import com.example.rentalfinder.view.components.FormField
@@ -80,14 +81,21 @@ fun AddBody(
     var title by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
     var totalArea by remember { mutableStateOf("") }
+    var selectedCategory by remember { mutableStateOf("Select Category") }
     var description by remember { mutableStateOf("") }
+
     var selectedCity by remember { mutableStateOf("Select City") }
-    var location by remember { mutableStateOf("") }
+    var selectedLocation by remember { mutableStateOf("Select Location") }
     var streetAddress by remember { mutableStateOf("") }
     var zipCode by remember { mutableStateOf("") }
+
+    var selectedAmenities by remember { mutableStateOf(setOf<String>()) }
+
+    var selectedLease by remember { mutableStateOf("Select Lease") }
+    var selectedFurniture by remember { mutableStateOf("Select ") }
+    var selectedTenant by remember { mutableStateOf("Select Tenant") }
     var yearBuilt by remember { mutableStateOf("") }
     var levels by remember { mutableStateOf("") }
-
     var bedroom by rememberSaveable { mutableStateOf("") }
     var bathroom by rememberSaveable { mutableStateOf("") }
     var kitchen by rememberSaveable { mutableStateOf("") }
@@ -144,12 +152,21 @@ fun AddBody(
                         placeholder = "e.g. 2BHK Apartment in Baneshwor"
                     )
 
+                    //Category
+                    CommonDropdown(
+                        selectedItem = selectedCategory,
+                        label = "Category",
+                        items = listOf("Apartment", "Pokhara", "Lalitpur"),
+                        onItemSelected = { selectedCategory = it }
+                    )
+
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         verticalAlignment = Alignment.Top
                     ) {
+                        //Price
                         NumberField(
                             label = "Price/month (NPR)",
                             value = price,
@@ -158,6 +175,7 @@ fun AddBody(
                             modifier = Modifier.weight(1f)
                         )
 
+                        //Area
                         NumberField(
                             label = "Total Area (sq.m)",
                             value = totalArea,
@@ -175,17 +193,104 @@ fun AddBody(
 
                 }
             }
-
             item {
-                Column(modifier = Modifier.padding(30.dp)
-                ){
+                Column(modifier = Modifier.padding(30.dp)) {
+                    Text("Location Details",style = TextStyle(
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = ForestGreen,
+                        textAlign = TextAlign.Center
+                    ));
 
+                    //City
                     CommonDropdown(
                         selectedItem = selectedCity,
                         label = "City",
                         items = listOf("Kathmandu", "Pokhara", "Lalitpur"),
                         onItemSelected = { selectedCity = it }
                     )
+
+                    //Location
+                    CommonDropdown(
+                        selectedItem = selectedLocation,
+                        label = "Location",
+                        items = listOf("Baneshwor", "Sankhamul", "Kalanki", "Patan","Suryabinayak"),
+                        onItemSelected = { selectedLocation = it }
+                    )
+
+                    //Street Address
+                    FormField(
+                        label = "Street Address",
+                        value = streetAddress,
+                        onValueChange = { streetAddress = it },
+                        placeholder = "e.g. Near Everest Bank, Shankhamul Marg"
+                    )
+
+                    //ZIP Code
+                    NumberField(
+                        label = "ZIP Code",
+                        value = zipCode,
+                        onValueChange = { zipCode = it },
+                        maxDigits = 5
+                    )
+                }
+            }
+            item {
+                Column(modifier = Modifier.padding(30.dp)
+                ) {
+                    Text("Amenities Section", style = TextStyle(
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = ForestGreen,
+                        textAlign = TextAlign.Center
+                    ));
+
+                    AmenitiesChips(
+                        label = "Amenities",
+                        amenities = listOf(
+                            "Wi-Fi",
+                            "Parking",
+                            "Lift",
+                            "CCTV",
+                            "Water Supply"
+                        ),
+                        selectedAmenities = selectedAmenities,
+                        onSelectionChange = { selectedAmenities = it }
+                    )
+                }
+            }
+
+            item {
+                Column(modifier = Modifier.padding(30.dp)
+                ){
+                    Text("Lease and Furnishing Details", style = TextStyle(
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = ForestGreen,
+                        textAlign = TextAlign.Center
+                    ));
+                    //Lease
+                    CommonDropdown(
+                        selectedItem = selectedLease,
+                        label = "Lease Type",
+                        items = listOf("Short-term", "Long-term"),
+                        onItemSelected = { selectedLease = it }
+                    )
+                    //Furnishing Status
+                    CommonDropdown(
+                        selectedItem = selectedFurniture,
+                        label = "Furnishing Status",
+                        items = listOf("Furnished", "Unfurnished", "Lalitpur"),
+                        onItemSelected = { selectedFurniture = it }
+                    )
+                    //Tenant Type
+                    CommonDropdown(
+                        selectedItem = selectedTenant,
+                        label = "Tenant Type",
+                        items = listOf("Family", "Female-only", "Workers"),
+                        onItemSelected = { selectedTenant = it }
+                    )
+
                     //Year Built
                     NumberField(
                         label = "Year Built (B.S.)",

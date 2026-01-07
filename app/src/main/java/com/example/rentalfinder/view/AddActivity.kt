@@ -46,6 +46,7 @@ import com.example.rentalfinder.utils.ImageUtils
 import com.example.rentalfinder.R
 import com.example.rentalfinder.ui.theme.ForestGreen
 import com.example.rentalfinder.ui.theme.MintGreen
+import com.example.rentalfinder.view.components.CommonDropdown
 import com.example.rentalfinder.view.components.DescriptionField
 import com.example.rentalfinder.view.components.FormField
 import com.example.rentalfinder.view.components.NumberField
@@ -80,6 +81,7 @@ fun AddBody(
     var price by remember { mutableStateOf("") }
     var totalArea by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
+    var selectedCity by remember { mutableStateOf("Select City") }
     var location by remember { mutableStateOf("") }
     var streetAddress by remember { mutableStateOf("") }
     var zipCode by remember { mutableStateOf("") }
@@ -149,7 +151,7 @@ fun AddBody(
                         verticalAlignment = Alignment.Top
                     ) {
                         NumberField(
-                            label = "Price per month (NPR)",
+                            label = "Price/month (NPR)",
                             value = price,
                             onValueChange = { price = it },
                             maxDigits = 7, // adjust as needed
@@ -177,6 +179,13 @@ fun AddBody(
             item {
                 Column(modifier = Modifier.padding(30.dp)
                 ){
+
+                    CommonDropdown(
+                        selectedItem = selectedCity,
+                        label = "City",
+                        items = listOf("Kathmandu", "Pokhara", "Lalitpur"),
+                        onItemSelected = { selectedCity = it }
+                    )
                     //Year Built
                     NumberField(
                         label = "Year Built (B.S.)",

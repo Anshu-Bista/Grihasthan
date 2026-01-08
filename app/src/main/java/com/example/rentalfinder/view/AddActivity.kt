@@ -2,6 +2,7 @@ package com.example.rentalfinder.view
 
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -19,6 +20,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -34,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -44,13 +48,20 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.rentalfinder.utils.ImageUtils
 import com.example.rentalfinder.R
+import com.example.rentalfinder.model.PropertyModel
+import com.example.rentalfinder.repository.CommonRepoImpl
+import com.example.rentalfinder.repository.PropertyRepoImpl
 import com.example.rentalfinder.ui.theme.ForestGreen
+import com.example.rentalfinder.ui.theme.Gold
 import com.example.rentalfinder.ui.theme.MintGreen
+import com.example.rentalfinder.ui.theme.OffWhite
 import com.example.rentalfinder.view.components.AmenitiesChips
 import com.example.rentalfinder.view.components.CommonDropdown
 import com.example.rentalfinder.view.components.DescriptionField
 import com.example.rentalfinder.view.components.FormField
 import com.example.rentalfinder.view.components.NumberField
+import com.example.rentalfinder.viewmodel.CommonViewModel
+import com.example.rentalfinder.viewmodel.PropertyViewModel
 
 class AddActivity : ComponentActivity() {
     lateinit var imageUtils: ImageUtils
@@ -99,6 +110,14 @@ fun AddBody(
     var bedroom by rememberSaveable { mutableStateOf("") }
     var bathroom by rememberSaveable { mutableStateOf("") }
     var kitchen by rememberSaveable { mutableStateOf("") }
+
+    val commonRepo = remember { CommonRepoImpl() }
+    val productRepo = remember { PropertyRepoImpl() }
+
+    val commonViewModel = remember { CommonViewModel(commonRepo) }
+    val propertyViewModel = remember { PropertyViewModel(productRepo) }
+
+    val context = LocalContext.current
 
 
     Scaffold(containerColor = MintGreen) { innerPadding->
@@ -334,6 +353,83 @@ fun AddBody(
                             onValueChange = { kitchen = it },
                             modifier = Modifier.weight(1f)
                         );
+                    }
+                    Button(onClick = {
+                        val pPrice = price.toDoubleOrNull()
+                        val pArea = totalArea.toDoubleOrNull()
+                        val pZip = zipCode.toIntOrNull()
+
+                        val pYearBuilt = yearBuilt.toIntOrNull()
+                        val pLevels = levels.toIntOrNull()
+                        val pBedrooms = bedroom.toIntOrNull()
+                        val pBathrooms = bathroom.toIntOrNull()
+                        val pKitchens = kitchen.toIntOrNull()
+
+                        if (
+                            pPrice == null || pArea == null || pZip == null ||
+                            pYearBuilt == null || pLevels == null ||
+                            pBedrooms == null || pBathrooms == null || pKitchens == null
+                        ) {
+                            Toast.makeText(context, "Please enter valid numeric values", Toast.LENGTH_SHORT).show()
+                            return@Button
+                        }
+
+                        if (selectedImageUri == null){
+                            Toast.makeText(context, "Please select a property image", Toast.LENGTH_SHORT).show()
+                            return@Button
+                        }
+                        commonViewModel.uploadImage(context, selectedImageUri){
+                            imageUrl->
+                            if(imageUrl == null){
+                                Toast.makeText(context, "Image upload failed", Toast.LENGTH_SHORT).show()
+                                return@uploadImage
+                            }
+
+                            val propertyModel = PropertyModel(
+                                title = title.trim(),
+                                price = pPrice,
+                                totalArea = pArea,
+                                description = description.trim(),
+
+                                categoryId = selectedCategory,
+
+                                city = selectedCity,
+                                location = selectedLocation,
+                                streetAddress = streetAddress.trim(),
+                                zipCode = pZip,
+
+                                amenities = selectedAmenities.toList(),
+
+                                leaseType = selectedLease,
+                                furnitureType = selectedFurniture,
+                                tenantType = selectedTenant,
+
+                                yearBuilt = pYearBuilt,
+                                levels = pLevels,
+                                bedrooms = pBedrooms,
+                                bathrooms = pBathrooms,
+                                kitchens = pKitchens,
+                                imageUrl = imageUrl
+                            )
+                            propertyViewModel.addProperty(propertyModel){
+                                success, message ->
+                                if (success){
+                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                }else{
+                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+
+                    },
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(15.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Gold,
+                            contentColor = OffWhite)
+                    ){
+                        Text("Submit",
+                            style = TextStyle(fontSize = 20.sp,
+                                fontWeight = FontWeight.ExtraBold))
                     }
 
                 }

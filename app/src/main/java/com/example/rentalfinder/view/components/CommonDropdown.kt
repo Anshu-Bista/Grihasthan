@@ -65,7 +65,7 @@ fun CommonDropdown(
                 items.forEach { item ->
                     DropdownMenuItem(
                         text = { Text(item,
-                            style = TextStyle(fontSize = 14.sp)) },
+                            style = TextStyle(fontSize = 16.sp)) },
                         onClick = {
                             onItemSelected(item)
                             expanded = false

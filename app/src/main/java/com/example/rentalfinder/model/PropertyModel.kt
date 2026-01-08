@@ -2,7 +2,7 @@ package com.example.rentalfinder.model
 
 class PropertyModel(
     // Basic info
-    val id: String = "",
+    var propertyId: String = "",
     val title: String = "",
     val price: Double = 0.0,
     val totalArea: Double = 0.0,
@@ -38,7 +38,7 @@ class PropertyModel(
     fun PropertyModel.toMap(): Map<String, Any?> {
         return mapOf(
             // Basic info
-            "id" to id,
+            "propertyId" to propertyId,
             "title" to title,
             "price" to price,
             "totalArea" to totalArea,

@@ -8,24 +8,28 @@ interface PropertyRepo {
         model: PropertyModel,
         callback: (Boolean, String)-> Unit
     )
-
-    fun editProduct(
+    fun editProperty(
         model: PropertyModel,
-        callback: (Boolean, String) -> Unit)
+        callback: (Boolean, String) -> Unit
+    )
 
-    fun deleteProduct(
-        productId: String,
-        callback: (Boolean, String) -> Unit)
+    fun deleteProperty(
+        propertyId: String,
+        callback: (Boolean, String) -> Unit
+    )
 
-    fun getProductById(
-        productId: String,
-        callback: (Boolean, String, PropertyModel?) -> Unit)
+    fun getPropertyById(
+        propertyId: String,
+        callback: (Boolean, String, PropertyModel?) -> Unit
+    )
 
-    fun getAllProducts(
-        callback: (Boolean, String, List<PropertyModel>?) -> Unit)
+    fun getAllProperties(
+        callback: (Boolean, String, List<PropertyModel>?) -> Unit
+    )
 
-    fun getProductByCategory(
+    fun getPropertiesByCategory(
         categoryId: String,
-        callback: (Boolean, String, List<PropertyModel>?) -> Unit)
+        callback: (Boolean, String, List<PropertyModel>?) -> Unit
+    )
 
 }

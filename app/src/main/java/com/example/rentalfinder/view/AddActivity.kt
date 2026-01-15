@@ -87,8 +87,6 @@ fun AddBody(
     selectedImageUri: Uri?,
     onPickImage: () -> Unit
 ){
-
-
     var title by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
     var totalArea by remember { mutableStateOf("") }

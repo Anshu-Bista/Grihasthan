@@ -1,8 +1,11 @@
 package com.example.rentalfinder.repository
 
 import com.example.rentalfinder.model.PropertyModel
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class PropertyRepoImpl: PropertyRepo {
     val database: FirebaseDatabase = FirebaseDatabase.getInstance()
@@ -25,32 +28,64 @@ class PropertyRepoImpl: PropertyRepo {
 
     }
 
-    override fun editProduct(
+    override fun editProperty(
         model: PropertyModel,
         callback: (Boolean, String) -> Unit
     ) {
         TODO("Not yet implemented")
     }
 
-    override fun deleteProduct(
-        productId: String,
+    override fun deleteProperty(
+        propertyId: String,
         callback: (Boolean, String) -> Unit
     ) {
         TODO("Not yet implemented")
     }
 
-    override fun getProductById(
-        productId: String,
+    override fun getPropertyById(
+        propertyId: String,
         callback: (Boolean, String, PropertyModel?) -> Unit
     ) {
-        TODO("Not yet implemented")
+        ref.child(propertyId).addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()){
+                    var data = snapshot.getValue(PropertyModel::class.java)
+                    if(data!= null){
+                        callback(true, "Property fetched", data)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                callback(false, error.message, null)
+            }
+
+        })
     }
 
-    override fun getAllProducts(callback: (Boolean, String, List<PropertyModel>?) -> Unit) {
-        TODO("Not yet implemented")
+    override fun getAllProperties(callback: (Boolean, String, List<PropertyModel>?) -> Unit) {
+        ref.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()){
+                    var allProperties = mutableListOf<PropertyModel>()
+                    for (data in snapshot.children){
+                        var property = data.getValue(PropertyModel::class.java)
+                        if (property!=null){
+                            allProperties.add(property)
+                        }
+                    }
+                    callback(true,"Property fetched", allProperties)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                callback(false, error.message, emptyList())
+            }
+
+        })
     }
 
-    override fun getProductByCategory(
+    override fun getPropertiesByCategory(
         categoryId: String,
         callback: (Boolean, String, List<PropertyModel>?) -> Unit
     ) {

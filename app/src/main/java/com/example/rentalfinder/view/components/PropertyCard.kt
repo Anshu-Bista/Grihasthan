@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,16 +28,25 @@ import com.example.rentalfinder.R
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.example.rentalfinder.model.PropertyModel
 import com.example.rentalfinder.repository.PropertyRepoImpl
+import com.example.rentalfinder.ui.theme.Gold
+import com.example.rentalfinder.ui.theme.SoftPurple
 import com.example.rentalfinder.viewmodel.PropertyViewModel
 
 @Composable
 fun PropertyCard(property: PropertyModel){
     Card(modifier = Modifier.fillMaxWidth()
-        .padding(15.dp)
+        .padding(15.dp),
+            colors = CardDefaults.cardColors(
+            containerColor = SoftPurple
+            ),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(6.dp)
+
     ) {
         Column(modifier = Modifier.fillMaxWidth()
             .padding(10.dp)
@@ -55,20 +66,15 @@ fun PropertyCard(property: PropertyModel){
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = property.price.toString(),
+                    color = Gold,
+                    fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.headlineMedium
                 )
-                Image(painter = painterResource(R.drawable.baseline_favorite_24),
-                    contentDescription = null)
             }
 
             Text(
                 text = property.title,
                 style = MaterialTheme.typography.titleMedium
-            )
-
-            Text(
-                text = "Rs. ${property.price}",
-                style = MaterialTheme.typography.bodyMedium
             )
 
             Text(
@@ -89,6 +95,7 @@ fun PropertyCard(property: PropertyModel){
                     Icon(
                         painter = painterResource(R.drawable.baseline_bed_24),
                         contentDescription = "Bedrooms",
+                        tint = Gold,
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(6.dp))
@@ -103,6 +110,7 @@ fun PropertyCard(property: PropertyModel){
                     Icon(
                         painter = painterResource(R.drawable.bathroom),
                         contentDescription = "Bathrooms",
+                        tint = Gold,
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(6.dp))
@@ -117,6 +125,7 @@ fun PropertyCard(property: PropertyModel){
                     Icon(
                         painter = painterResource(R.drawable.refrigerator),
                         contentDescription = "Kitchens",
+                        tint = Gold,
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(6.dp))

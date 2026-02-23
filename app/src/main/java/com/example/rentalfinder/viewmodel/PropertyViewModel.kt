@@ -31,8 +31,8 @@ class PropertyViewModel(val repo: PropertyRepo): ViewModel() {
     val properties : MutableLiveData<PropertyModel?>
         get() = _properties
 
-    private val _allproperties = MutableLiveData<List<PropertyModel>?>()
-    val allproperties: MutableLiveData<List<PropertyModel>?>
+    private val _allproperties = MutableLiveData<List<PropertyModel>>(emptyList())
+    val allproperties: MutableLiveData<List<PropertyModel>>
         get() = _allproperties
 
     fun getPropertyById(
@@ -49,7 +49,7 @@ class PropertyViewModel(val repo: PropertyRepo): ViewModel() {
     fun getAllProperties() {
         repo.getAllProperties(){
                 success,message,data->
-            if(success){
+            if(success && data != null){
                 _allproperties.postValue(data)
             }
         }

@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import com.example.rentalfinder.R
+import com.example.rentalfinder.ui.theme.MintGreen
 
 class DashboardActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +54,7 @@ fun DashboardBody(){
         NavItem(label = "Notification", R.drawable.baseline_favorite_24),
         NavItem(label = "Profile", R.drawable.baseline_person_24)
     )
-    Scaffold (
+    Scaffold (containerColor = MintGreen,
         floatingActionButton = {
         FloatingActionButton(onClick = {
             val intent = Intent(context, AddActivity::class.java)

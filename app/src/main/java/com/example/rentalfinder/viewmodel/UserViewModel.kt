@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.rentalfinder.model.UserModel
 import com.example.rentalfinder.repository.UserRepo
+import com.google.firebase.auth.FirebaseAuth
 
 class UserViewModel(val repo: UserRepo) : ViewModel() {
 
@@ -42,11 +43,12 @@ class UserViewModel(val repo: UserRepo) : ViewModel() {
         repo.deleteAccount(userId,callback)
     }
 
-    fun editProfile(
-        userId: String, model: UserModel,
-        callback: (Boolean, String) -> Unit
-    ){
-        repo.editProfile(userId,model,callback)
+
+    fun editProfile(model: UserModel, callback: (Boolean, String) -> Unit) {
+
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        repo.editProfile(uid, model, callback)
     }
 
     private val _users = MutableLiveData<UserModel?>()  //real time data trackking

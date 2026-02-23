@@ -1,40 +1,29 @@
 package com.example.rentalfinder.view
 
+import android.app.Activity
 import android.content.Intent
+import android.net.Uri
+import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.ui.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.layout.ContentScale
+import coil3.compose.AsyncImage
 import com.example.rentalfinder.repository.UserRepoImpl
-import com.example.rentalfinder.ui.theme.ForestGreen
-import com.example.rentalfinder.ui.theme.Gold
-import com.example.rentalfinder.ui.theme.OffWhite
 import com.example.rentalfinder.viewmodel.UserViewModel
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
+import com.example.rentalfinder.utils.ImageUtils
+import com.example.rentalfinder.ui.theme.*
 import com.example.rentalfinder.view.components.FormField
 
 @Composable
@@ -49,6 +38,28 @@ fun ProfileScreen() {
         .getInstance()
         .currentUser?.uid ?: ""
 
+    // ⭐ Image picker
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+
+    val activity = context as ComponentActivity
+
+    val imageUtils = remember {
+        ImageUtils(activity, activity)
+    }
+
+    LaunchedEffect(Unit) {
+        imageUtils.registerLaunchers {
+            selectedImageUri = it
+        }
+    }
+
+    // ⭐ Profile fields
+    var firstName by remember { mutableStateOf("") }
+    var lastName by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var gender by remember { mutableStateOf("Male") }
+    var dob by remember { mutableStateOf("") }
+
     LaunchedEffect(userId) {
         if (userId.isNotEmpty()) {
             viewModel.getUserById(userId)
@@ -57,27 +68,25 @@ fun ProfileScreen() {
 
     val user by viewModel.users.observeAsState()
 
+    LaunchedEffect(user) {
+        user?.let {
+            firstName = it.firstName
+            lastName = it.lastName
+            email = it.email
+            gender = it.gender.ifEmpty { "Male" }
+            dob = it.dob
+        }
+    }
+
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
 
-        if (user == null) {
-            item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(40.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Loading profile...", color = ForestGreen)
-                }
-            }
-        }
-
         user?.let { u ->
 
-            // ⭐ Profile Header
+            // ⭐ Header
             item {
+
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -87,37 +96,56 @@ fun ProfileScreen() {
 
                     Box(
                         modifier = Modifier
-                            .size(110.dp)
-                            .background(
-                                Gold,
-                                RoundedCornerShape(100.dp)
-                            ),
+                            .size(120.dp)
+                            .background(Gold, RoundedCornerShape(100.dp))
+                            .clickable {
+                                imageUtils.launchImagePicker()
+                            },
                         contentAlignment = Alignment.Center
                     ) {
 
-                        val firstChar =
-                            u.email.firstOrNull()?.uppercaseChar()?.toString() ?: "U"
+                        when {
+                            selectedImageUri != null -> {
+                                AsyncImage(
+                                    model = selectedImageUri,
+                                    contentDescription = "Profile Image",
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
 
-                        Text(
-                            text = firstChar,
-                            fontSize = 40.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = OffWhite
-                        )
+                            u.imageUrl.isNotEmpty() -> {
+                                AsyncImage(
+                                    model = u.imageUrl,
+                                    contentDescription = "Profile Image",
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
+
+                            else -> {
+                                Text(
+                                    text = firstName.firstOrNull()?.toString() ?: "U",
+                                    fontSize = 40.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = OffWhite
+                                )
+                            }
+                        }
                     }
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(Modifier.height(10.dp))
 
                     Text(
-                        text = u.email,
-                        fontSize = 20.sp,
+                        text = email,
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = ForestGreen
                     )
                 }
             }
 
-            // ⭐ Profile Info Section
+            // ⭐ Profile Form
             item {
 
                 Column(
@@ -128,32 +156,96 @@ fun ProfileScreen() {
                     Text(
                         "Profile Information",
                         fontSize = 20.sp,
-                        fontWeight = FontWeight.ExtraBold,
+                        fontWeight = FontWeight.Bold,
                         color = ForestGreen
                     )
 
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+
+                        FormField(
+                            label = "First Name",
+                            value = firstName,
+                            onValueChange = { firstName = it },
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        FormField(
+                            label = "Last Name",
+                            value = lastName,
+                            onValueChange = { lastName = it },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+
                     FormField(
                         label = "Email",
-                        value = u.email,
+                        value = email,
                         onValueChange = {},
-                        placeholder = "",
+                        modifier = Modifier.fillMaxWidth()
                     )
 
-                    FormField(
-                        label = "Gender",
-                        value = u.gender.ifEmpty { "Not provided" },
-                        onValueChange = {},
-                    )
+                    Text("Gender", fontWeight = FontWeight.Bold)
 
-                    FormField(
-                        label = "Date of Birth",
-                        value = u.dob.ifEmpty { "Not provided" },
-                        onValueChange = {},
-                    )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(20.dp)
+                    ) {
+                        listOf("Male", "Female", "Other").forEach { g ->
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                RadioButton(
+                                    selected = gender == g,
+                                    onClick = { gender = g }
+                                )
+                                Text(g)
+                            }
+                        }
+                    }
+
+                    Text("Date of Birth", fontWeight = FontWeight.Bold)
+
+                    Button(
+                        onClick = {
+                            val picker = android.app.DatePickerDialog(context)
+
+                            picker.setOnDateSetListener { _, y, m, d ->
+                                dob = "$d/${m + 1}/$y"
+                            }
+
+                            picker.show()
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Gold)
+                    ) {
+                        Text(if (dob.isEmpty()) "Select DOB" else dob)
+                    }
+
+                    // ⭐ Save Button
+                    Button(
+                        onClick = {
+
+                            val updatedUser = u.copy(
+                                firstName = firstName,
+                                lastName = lastName,
+                                email = email,
+                                gender = gender,
+                                dob = dob,
+                                imageUrl = u.imageUrl
+                            )
+                            viewModel.editProfile(updatedUser) { success, msg ->
+                                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                            }
+
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = Gold)
+                    ) {
+                        Text("Save Profile")
+                    }
                 }
             }
 
-            // ⭐ Logout Button
+            // ⭐ Logout
             item {
 
                 Button(
@@ -169,10 +261,7 @@ fun ProfileScreen() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(30.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Gold,
-                        contentColor = OffWhite
-                    )
+                    colors = ButtonDefaults.buttonColors(containerColor = Gold)
                 ) {
                     Text("Logout")
                 }

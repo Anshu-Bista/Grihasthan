@@ -54,55 +54,58 @@ fun PropertyCard(
 ){
     var expanded by remember { mutableStateOf(false) }
 
-    Card(modifier = Modifier
-        .fillMaxWidth()
-        .padding(15.dp)
-        .clickable { onClick(property) },
-            colors = CardDefaults.cardColors(
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)   // smaller outer padding
+            .clickable { onClick(property) },
+        colors = CardDefaults.cardColors(
             containerColor = SoftPurple
-            ),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(6.dp)
-
+        ),
+        shape = RoundedCornerShape(14.dp),
+        elevation = CardDefaults.cardElevation(4.dp)  // smaller shadow
     ) {
-        Column(modifier = Modifier.fillMaxWidth()
-            .padding(10.dp)
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)  // smaller inner padding
         ) {
+
             AsyncImage(
                 model = property.imageUrl,
                 contentDescription = "Property Image",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp),
+                    .height(150.dp),   // ⭐ reduced from 200 → 150
                 contentScale = ContentScale.Crop,
                 placeholder = painterResource(R.drawable.destination),
                 error = painterResource(R.drawable.message)
             )
-            Spacer(modifier = Modifier.height(8.dp))
+
+            Spacer(modifier = Modifier.height(6.dp))
 
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                // ⭐ PRICE (LEFT)
                 Text(
                     text = "Rs. ${property.price}",
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    fontSize = 16.sp,   // slightly smaller
+                    fontWeight = FontWeight.Bold
                 )
 
-                // ⭐ MORE ICON (RIGHT)
                 Box {
-                    IconButton(onClick = { expanded = true }) {
+                    IconButton(
+                        onClick = { expanded = true },
+                        modifier = Modifier.size(22.dp)  // smaller icon area
+                    ) {
                         Icon(
                             painter = painterResource(R.drawable.baseline_more_vert_24),
-                            contentDescription = "Menu", tint = Gold
+                            contentDescription = "Menu",
+                            tint = Gold
                         )
                     }
 
@@ -110,7 +113,6 @@ fun PropertyCard(
                         expanded = expanded,
                         onDismissRequest = { expanded = false }
                     ) {
-
                         DropdownMenuItem(
                             text = { Text("Edit") },
                             onClick = {
@@ -118,7 +120,6 @@ fun PropertyCard(
                                 onEdit(property)
                             }
                         )
-
                         DropdownMenuItem(
                             text = { Text("Delete") },
                             onClick = {
@@ -132,66 +133,59 @@ fun PropertyCard(
 
             Text(
                 text = property.title,
-                style = MaterialTheme.typography.titleMedium
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Medium
             )
 
             Text(
                 text = "${property.city}, ${property.area}",
-                style = MaterialTheme.typography.bodySmall
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+
+            Spacer(modifier = Modifier.height(6.dp))
+
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
 
-                // 1️⃣ Bedrooms
-                Row(
-                    modifier = Modifier.weight(1f),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.baseline_bed_24),
-                        contentDescription = "Bedrooms",
-                        tint = Gold,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text("${property.bedrooms}")
-                }
+                InfoIconText(
+                    icon = R.drawable.baseline_bed_24,
+                    value = property.bedrooms.toString()
+                )
 
-                // 2️⃣ Bathrooms
-                Row(
-                    modifier = Modifier.weight(1f),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.bathroom),
-                        contentDescription = "Bathrooms",
-                        tint = Gold,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text("${property.bathrooms}")
-                }
+                InfoIconText(
+                    icon = R.drawable.bathroom,
+                    value = property.bathrooms.toString()
+                )
 
-                // 3️⃣ Kitchens
-                Row(
-                    modifier = Modifier.weight(1f),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.refrigerator),
-                        contentDescription = "Kitchens",
-                        tint = Gold,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text("${property.kitchens}")
-                }
+                InfoIconText(
+                    icon = R.drawable.refrigerator,
+                    value = property.kitchens.toString()
+                )
             }
-
-
         }
+    }
+}
+
+
+@Composable
+fun InfoIconText(icon: Int, value: String) {
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(icon),
+            contentDescription = null,
+            tint = Gold,
+            modifier = Modifier.size(16.dp)  // smaller icons
+        )
+        Spacer(modifier = Modifier.width(4.dp))
+        Text(
+            text = value,
+            fontSize = 12.sp
+        )
     }
 }

@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -53,6 +54,44 @@ fun HomeScreen(){
             .padding(10.dp)
             .fillMaxSize()
     ) {
+        item {
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(30.dp,)
+            ) {
+
+                Text(
+                    text = "🏡 Welcome to Grihasthan",
+                    fontSize = 24.sp,
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+                Text(
+                    text = "Your trusted rental marketplace",
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                Spacer(modifier = Modifier.padding(12.dp))
+
+                FeatureRow(
+                    icon = R.drawable.baseline_search_24,
+                    text = "Search verified rental properties easily"
+                )
+
+                FeatureRow(
+                    icon = R.drawable.baseline_home_24,
+                    text = "List your property and reach renters"
+                )
+
+                FeatureRow(
+                    icon = R.drawable.baseline_person_24,
+                    text = "Connect renters and property owners directly"
+                )
+            }
+        }
 
         // Empty State
         if (properties.isEmpty()) {
@@ -93,5 +132,27 @@ fun HomeScreen(){
                 }
             )
         }
+    }
+}
+@Composable
+fun FeatureRow(icon: Int, text: String) {
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        Icon(
+            painter = painterResource(id = icon),
+            contentDescription = null,
+            modifier = Modifier.padding(end = 10.dp)
+        )
+
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }

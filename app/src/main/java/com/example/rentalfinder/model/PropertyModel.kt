@@ -32,46 +32,42 @@ class PropertyModel(
 
     // Images
     var imageUrl :String = "",
-    ) {
+    )
 
+fun PropertyModel.toMap(): Map<String, Any?> {
+    return mapOf(
+        // Basic info
+        "propertyId" to propertyId,
+        "title" to title,
+        "price" to price,
+        "totalArea" to totalArea,
+        "description" to description,
 
-    fun PropertyModel.toMap(): Map<String, Any?> {
-        return mapOf(
-            // Basic info
-            "propertyId" to propertyId,
-            "title" to title,
-            "price" to price,
-            "totalArea" to totalArea,
-            "description" to description,
+        // Category
+        "categoryId" to categoryId,
 
-            // Category
-            "categoryId" to categoryId,
+        // Location (nested map is BEST practice)
+        "location" to mapOf(
+            "city" to city,
+            "area" to area,
+            "streetAddress" to streetAddress,
+            "zipCode" to zipCode
+        ),
 
-            // Location (nested map is BEST practice)
-            "location" to mapOf(
-                "city" to city,
-                "area" to area,
-                "streetAddress" to streetAddress,
-                "zipCode" to zipCode
-            ),
+        // Amenities
+        "amenities" to amenities,
 
-            // Amenities
-            "amenities" to amenities,
+        // Property details
+        "leaseType" to leaseType,
+        "furnitureType" to furnitureType,
+        "tenantType" to tenantType,
+        "yearBuilt" to yearBuilt,
+        "levels" to levels,
+        "bedrooms" to bedrooms,
+        "bathrooms" to bathrooms,
+        "kitchens" to kitchens,
 
-            // Property details
-            "leaseType" to leaseType,
-            "furnitureType" to furnitureType,
-            "tenantType" to tenantType,
-            "yearBuilt" to yearBuilt,
-            "levels" to levels,
-            "bedrooms" to bedrooms,
-            "bathrooms" to bathrooms,
-            "kitchens" to kitchens,
-
-            // Images
-            "imageUrl" to imageUrl
-        )
-    }
-
-
+        // Images
+        "imageUrl" to imageUrl
+    )
 }

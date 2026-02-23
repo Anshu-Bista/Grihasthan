@@ -1,6 +1,7 @@
 package com.example.rentalfinder.repository
 
 import com.example.rentalfinder.model.PropertyModel
+import com.example.rentalfinder.model.toMap
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -32,14 +33,28 @@ class PropertyRepoImpl: PropertyRepo {
         model: PropertyModel,
         callback: (Boolean, String) -> Unit
     ) {
-        TODO("Not yet implemented")
+        ref.child(model.propertyId)
+            .updateChildren(model.toMap())
+            .addOnSuccessListener {
+                callback(true, "Property updated")
+            }
+            .addOnFailureListener {
+                callback(false, it.message ?: "Update failed")
+            }
     }
 
     override fun deleteProperty(
         propertyId: String,
         callback: (Boolean, String) -> Unit
     ) {
-        TODO("Not yet implemented")
+        ref.child(propertyId)
+            .removeValue()
+            .addOnSuccessListener {
+                callback(true, "Property deleted")
+            }
+            .addOnFailureListener {
+                callback(false, it.message ?: "Delete failed")
+            }
     }
 
     override fun getPropertyById(

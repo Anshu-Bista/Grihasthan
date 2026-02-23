@@ -28,7 +28,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -69,13 +71,18 @@ class AddActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val propertyId = intent.getStringExtra("propertyId")
+
         enableEdgeToEdge()
         imageUtils = ImageUtils(this, this)
         imageUtils.registerLaunchers { uri ->
             selectedImageUri = uri
         }
         setContent {
-           AddBody(selectedImageUri = selectedImageUri,
+           AddBody(
+               propertyId = propertyId,
+               selectedImageUri = selectedImageUri,
                onPickImage = { imageUtils.launchImagePicker() }
            )
         }
@@ -84,9 +91,11 @@ class AddActivity : ComponentActivity() {
 
 @Composable
 fun AddBody(
+    propertyId: String?,
     selectedImageUri: Uri?,
     onPickImage: () -> Unit
 ){
+
     var title by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
     var totalArea by remember { mutableStateOf("") }
@@ -117,6 +126,49 @@ fun AddBody(
 
     val context = LocalContext.current
 
+    LaunchedEffect (propertyId){
+        if(propertyId != null){
+            propertyViewModel.getPropertyById(propertyId)
+        }
+    }
+
+    val property by propertyViewModel.properties.observeAsState()
+
+    LaunchedEffect(property) {
+        property?.let {
+
+            // Basic Info
+            title = it.title
+            price = it.price.toString()
+            totalArea = it.totalArea.toString()
+            description = it.description
+
+            // Category
+            selectedCategory = it.categoryId
+
+            // Location
+            selectedCity = it.city
+            selectedLocation = it.area
+            streetAddress = it.streetAddress
+            zipCode = it.zipCode.toString()
+
+            // Amenities
+            selectedAmenities = it.amenities.toSet()
+
+            // Lease + Furnishing
+            selectedLease = it.leaseType
+            selectedFurniture = it.furnitureType
+            selectedTenant = it.tenantType
+
+            // Property Details
+            yearBuilt = it.yearBuilt.toString()
+            levels = it.levels.toString()
+            bedroom = it.bedrooms.toString()
+            bathroom = it.bathrooms.toString()
+            kitchen = it.kitchens.toString()
+
+        }
+    }
 
     Scaffold(containerColor = MintGreen) { innerPadding->
         LazyColumn(modifier = Modifier.fillMaxSize()

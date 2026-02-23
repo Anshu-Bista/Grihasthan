@@ -1,5 +1,6 @@
 package com.example.rentalfinder.view
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
@@ -126,6 +127,9 @@ fun AddBody(
 
     val context = LocalContext.current
 
+    val isEditMode = propertyId != null
+    var existingImageUrl by remember { mutableStateOf<String?>(null) }
+
     LaunchedEffect (propertyId){
         if(propertyId != null){
             propertyViewModel.getPropertyById(propertyId)
@@ -136,6 +140,8 @@ fun AddBody(
 
     LaunchedEffect(property) {
         property?.let {
+
+            existingImageUrl = it.imageUrl
 
             // Basic Info
             title = it.title
@@ -188,13 +194,25 @@ fun AddBody(
                        .padding(10.dp)
                ) {
                    if (selectedImageUri != null) {
+
                        AsyncImage(
                            model = selectedImageUri,
                            contentDescription = "Selected Image",
                            modifier = Modifier.fillMaxSize(),
                            contentScale = ContentScale.Crop
                        )
+
+                   } else if (existingImageUrl != null) {
+
+                       AsyncImage(
+                           model = existingImageUrl,
+                           contentDescription = "Existing Image",
+                           modifier = Modifier.fillMaxSize(),
+                           contentScale = ContentScale.Crop
+                       )
+
                    } else {
+
                        Image(
                            painter = painterResource(R.drawable.baseline_camera_alt_24),
                            contentDescription = null,
@@ -410,82 +428,124 @@ fun AddBody(
                             modifier = Modifier.weight(1f)
                         );
                     }
-                    Button(onClick = {
-                        val pPrice = price.toDoubleOrNull()
-                        val pArea = totalArea.toDoubleOrNull()
-                        val pZip = zipCode.toIntOrNull()
+                    Button(
+                        onClick = {
 
-                        val pYearBuilt = yearBuilt.toIntOrNull()
-                        val pLevels = levels.toIntOrNull()
-                        val pBedrooms = bedroom.toIntOrNull()
-                        val pBathrooms = bathroom.toIntOrNull()
-                        val pKitchens = kitchen.toIntOrNull()
+                            val pPrice = price.toDoubleOrNull()
+                            val pArea = totalArea.toDoubleOrNull()
+                            val pZip = zipCode.toIntOrNull()
 
-                        if (
-                            pPrice == null || pArea == null || pZip == null ||
-                            pYearBuilt == null || pLevels == null ||
-                            pBedrooms == null || pBathrooms == null || pKitchens == null
-                        ) {
-                            Toast.makeText(context, "Please enter valid numeric values", Toast.LENGTH_SHORT).show()
-                            return@Button
-                        }
+                            val pYearBuilt = yearBuilt.toIntOrNull()
+                            val pLevels = levels.toIntOrNull()
+                            val pBedrooms = bedroom.toIntOrNull()
+                            val pBathrooms = bathroom.toIntOrNull()
+                            val pKitchens = kitchen.toIntOrNull()
 
-                        if (selectedImageUri == null){
-                            Toast.makeText(context, "Please select a property image", Toast.LENGTH_SHORT).show()
-                            return@Button
-                        }
-                        commonViewModel.uploadImage(context, selectedImageUri){
-                            imageUrl->
-                            if(imageUrl == null){
-                                Toast.makeText(context, "Image upload failed", Toast.LENGTH_SHORT).show()
-                                return@uploadImage
+                            if (
+                                title.isBlank() ||
+                                pPrice == null || pArea == null || pZip == null ||
+                                pYearBuilt == null || pLevels == null ||
+                                pBedrooms == null || pBathrooms == null || pKitchens == null
+                            ) {
+                                Toast.makeText(context, "Please enter valid values", Toast.LENGTH_SHORT).show()
+                                return@Button
                             }
 
-                            val propertyModel = PropertyModel(
-                                title = title.trim(),
-                                price = pPrice,
-                                totalArea = pArea,
-                                description = description.trim(),
+                            // Image validation
+                            if (!isEditMode && selectedImageUri == null && property?.imageUrl.isNullOrEmpty()) {
+                                Toast.makeText(context, "Please select property image", Toast.LENGTH_SHORT).show()
+                                return@Button
+                            }
 
-                                categoryId = selectedCategory,
+                            /**
+                            ⭐ Upload image only if user selected new image
+                             */
+                            fun saveProperty(imageUrl: String) {
 
-                                city = selectedCity,
-                                area = selectedLocation,
-                                streetAddress = streetAddress.trim(),
-                                zipCode = pZip,
+                                val propertyModel = PropertyModel(
+                                    propertyId = propertyId ?: "",
+                                    title = title.trim(),
+                                    price = pPrice,
+                                    totalArea = pArea,
+                                    description = description.trim(),
 
-                                amenities = selectedAmenities.toList(),
+                                    categoryId = selectedCategory,
 
-                                leaseType = selectedLease,
-                                furnitureType = selectedFurniture,
-                                tenantType = selectedTenant,
+                                    city = selectedCity,
+                                    area = selectedLocation,
+                                    streetAddress = streetAddress.trim(),
+                                    zipCode = pZip,
 
-                                yearBuilt = pYearBuilt,
-                                levels = pLevels,
-                                bedrooms = pBedrooms,
-                                bathrooms = pBathrooms,
-                                kitchens = pKitchens,
-                                imageUrl = imageUrl
-                            )
-                            propertyViewModel.addProperty(propertyModel){
-                                success, message ->
-                                if (success){
-                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                                }else{
-                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                    amenities = selectedAmenities.toList(),
+
+                                    leaseType = selectedLease,
+                                    furnitureType = selectedFurniture,
+                                    tenantType = selectedTenant,
+
+                                    yearBuilt = pYearBuilt,
+                                    levels = pLevels,
+                                    bedrooms = pBedrooms,
+                                    bathrooms = pBathrooms,
+                                    kitchens = pKitchens,
+
+                                    imageUrl = imageUrl
+                                )
+
+                                if (isEditMode) {
+                                    propertyViewModel.editProperty(propertyModel) { success, msg ->
+                                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+
+                                        if (success) {
+                                            context.startActivity(
+                                                Intent(context, DashboardActivity::class.java)
+                                            )
+                                        }
+                                    }
+                                } else {
+                                    propertyViewModel.addProperty(propertyModel) { success, msg ->
+                                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+
+                                        if (success) {
+                                            context.startActivity(
+                                                Intent(context, DashboardActivity::class.java)
+                                            )
+                                        }
+                                    }
                                 }
                             }
-                        }
 
-                    },
-                        modifier = Modifier.fillMaxWidth()
+                            /**
+                            ⭐ Image Upload Flow
+                             */
+                            if (selectedImageUri != null) {
+                                commonViewModel.uploadImage(context, selectedImageUri!!) { imageUrl ->
+                                    if (imageUrl == null) {
+                                        Toast.makeText(context, "Image upload failed", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        saveProperty(imageUrl)
+                                    }
+                                }
+                            } else {
+                                // If editing and no new image selected → keep old image
+                                saveProperty(property?.imageUrl ?: "")
+                            }
+
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .padding(15.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Gold,
-                            contentColor = OffWhite)
-                    ){
-                        Text("Submit",
-                            style = TextStyle(fontSize = 20.sp,
-                                fontWeight = FontWeight.ExtraBold))
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Gold,
+                            contentColor = OffWhite
+                        )
+                    ) {
+                        Text(
+                            "Submit",
+                            style = TextStyle(
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.ExtraBold
+                            )
+                        )
                     }
 
                 }

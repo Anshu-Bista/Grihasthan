@@ -1,5 +1,6 @@
 package com.example.rentalfinder.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -16,6 +17,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.setValue
@@ -39,7 +42,10 @@ import com.example.rentalfinder.view.ui.theme.RentalFinderTheme
 import com.example.rentalfinder.viewmodel.PropertyViewModel
 import coil3.request.ImageRequest
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import coil3.request.crossfade
+import com.example.rentalfinder.R
+import com.example.rentalfinder.ui.theme.OffWhite
 
 class DetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,19 +100,43 @@ fun DetailBody(propertyId: String) {
                 // IMAGE
                 item {
                     val context = LocalContext.current
-                    AsyncImage(
-                        model = ImageRequest.Builder(context)
-                            .data(p.imageUrl)
-                            .crossfade(true)
-                            .build(),
-                        contentDescription = "Property Image",
+
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(280.dp),
-                        contentScale = ContentScale.Crop
-                    )
-                }
+                            .height(280.dp)
+                    ) {
 
+                        // ⭐ PROPERTY IMAGE
+                        AsyncImage(
+                            model = ImageRequest.Builder(context)
+                                .data(p.imageUrl)
+                                .crossfade(true)
+                                .build(),
+                            contentDescription = "Property Image",
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+
+                        // ⭐ BACK BUTTON (Top Left)
+                        IconButton(
+                            onClick = {
+                                context.startActivity(
+                                    Intent(context, DashboardActivity::class.java)
+                                )
+                            },
+                            modifier = Modifier
+                                .align(Alignment.TopStart)
+                                .padding(16.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.baseline_arrow_back_ios_24),
+                                contentDescription = "Menu", tint = Gold
+                            )
+                        }
+                    }
+                }
                 // Title
                 item {
                     Text(

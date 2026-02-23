@@ -19,11 +19,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -180,48 +182,71 @@ fun AddBody(
         LazyColumn(modifier = Modifier.fillMaxSize()
             .padding(innerPadding)
         ) {
-           item {
-               Box(
-                   modifier = Modifier
-                       .fillMaxWidth()
-                       .height(200.dp)
-                       .clickable(
-                           indication = null,
-                           interactionSource = remember { MutableInteractionSource() }
-                       ) {
-                           onPickImage()
-                       }
-                       .padding(10.dp)
-               ) {
-                   if (selectedImageUri != null) {
+            item {
+                Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                verticalAlignment = Alignment.Top,
+            ) {
 
-                       AsyncImage(
-                           model = selectedImageUri,
-                           contentDescription = "Selected Image",
-                           modifier = Modifier.fillMaxSize(),
-                           contentScale = ContentScale.Crop
-                       )
+                // ⭐ BACK BUTTON (Top aligned)
+                IconButton(
+                    onClick = {
+                    context.startActivity(
+                        Intent(context, DashboardActivity::class.java)
+                    )
+                },
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.baseline_arrow_back_ios_24),
+                        contentDescription = "Back",
+                        tint = Gold
+                    )
+                }
 
-                   } else if (existingImageUrl != null) {
+                // ⭐ IMAGE PREVIEW
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(200.dp)
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) {
+                            onPickImage()
+                        }
+                ) {
 
-                       AsyncImage(
-                           model = existingImageUrl,
-                           contentDescription = "Existing Image",
-                           modifier = Modifier.fillMaxSize(),
-                           contentScale = ContentScale.Crop
-                       )
+                    if (selectedImageUri != null) {
+                        AsyncImage(
+                            model = selectedImageUri,
+                            contentDescription = "Selected Image",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
 
-                   } else {
+                    } else if (existingImageUrl != null) {
+                        AsyncImage(
+                            model = existingImageUrl,
+                            contentDescription = "Existing Image",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
 
-                       Image(
-                           painter = painterResource(R.drawable.baseline_camera_alt_24),
-                           contentDescription = null,
-                           modifier = Modifier.fillMaxSize(),
-                           contentScale = ContentScale.Crop
-                       )
-                   }
-               }
-           }
+                    } else {
+                        Image(
+                            painter = painterResource(R.drawable.baseline_camera_alt_24),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+                }
+            }
+        }
             item {
                 Column (modifier = Modifier.padding(30.dp),
                         verticalArrangement = Arrangement.spacedBy(10.dp)

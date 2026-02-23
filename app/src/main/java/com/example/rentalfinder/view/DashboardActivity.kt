@@ -15,6 +15,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +28,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import com.example.rentalfinder.R
 import com.example.rentalfinder.ui.theme.MintGreen
+import com.example.rentalfinder.ui.theme.OffWhite
+import com.example.rentalfinder.ui.theme.SoftOlive
 
 class DashboardActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +54,6 @@ fun DashboardBody(){
     val listItems = listOf(
         NavItem(label = "Home", R.drawable.home),
         NavItem(label = "Search", R.drawable.baseline_search_24),
-        NavItem(label = "Notification", R.drawable.baseline_favorite_24),
         NavItem(label = "Profile", R.drawable.baseline_person_24)
     )
     Scaffold (containerColor = MintGreen,
@@ -64,7 +66,7 @@ fun DashboardBody(){
         }
     },
         bottomBar = {
-            NavigationBar {
+            NavigationBar(containerColor = SoftOlive) {
                 listItems.forEachIndexed { index, item ->
                     NavigationBarItem(
                         icon = {
@@ -74,7 +76,14 @@ fun DashboardBody(){
                         },
                         label = {Text(item.label)},
                         onClick = {selectedIndex = index},
-                        selected = selectedIndex ==index
+                        selected = selectedIndex ==index,
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = SoftOlive,
+                            unselectedIconColor = OffWhite,
+                            selectedTextColor = OffWhite,
+                            unselectedTextColor = OffWhite,
+                            indicatorColor = OffWhite
+                        )
                     )
                 }
             }
@@ -86,7 +95,7 @@ fun DashboardBody(){
             when(selectedIndex){
                 0-> HomeScreen()
                 1->SearchScreen()
-                3->ProfileScreen()
+                2->ProfileScreen()
                 else -> HomeScreen()
             }
         }

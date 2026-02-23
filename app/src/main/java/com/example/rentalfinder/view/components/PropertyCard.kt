@@ -2,6 +2,7 @@ package com.example.rentalfinder.view.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,12 +34,15 @@ import com.example.rentalfinder.R
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.rentalfinder.model.PropertyModel
 import com.example.rentalfinder.repository.PropertyRepoImpl
 import com.example.rentalfinder.ui.theme.Gold
+import com.example.rentalfinder.ui.theme.OffWhite
 import com.example.rentalfinder.ui.theme.SoftPurple
 
 @Composable
@@ -61,45 +65,6 @@ fun PropertyCard(
         elevation = CardDefaults.cardElevation(6.dp)
 
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            Box {
-
-                IconButton(onClick = { expanded = true }) {
-                    Icon(
-                        painter = painterResource(R.drawable.baseline_more_vert_24),
-                        contentDescription = "Menu", tint = Gold
-                    )
-                }
-
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-
-                    DropdownMenuItem(
-                        text = { Text("Edit") },
-                        onClick = {
-                            expanded = false
-                            onEdit(property)
-                        }
-                    )
-
-                    DropdownMenuItem(
-                        text = { Text("Delete") },
-                        onClick = {
-                            expanded = false
-                            onDelete(property)
-                        }
-                    )
-                }
-            }
-        }
         Column(modifier = Modifier.fillMaxWidth()
             .padding(10.dp)
         ) {
@@ -115,13 +80,54 @@ fun PropertyCard(
             )
             Spacer(modifier = Modifier.height(8.dp))
 
-            Row(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                // ⭐ PRICE (LEFT)
                 Text(
-                    text = property.price.toString(),
-                    color = Gold,
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.headlineMedium
+                    text = "Rs. ${property.price}",
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 )
+
+                // ⭐ MORE ICON (RIGHT)
+                Box {
+                    IconButton(onClick = { expanded = true }) {
+                        Icon(
+                            painter = painterResource(R.drawable.baseline_more_vert_24),
+                            contentDescription = "Menu", tint = Gold
+                        )
+                    }
+
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+
+                        DropdownMenuItem(
+                            text = { Text("Edit") },
+                            onClick = {
+                                expanded = false
+                                onEdit(property)
+                            }
+                        )
+
+                        DropdownMenuItem(
+                            text = { Text("Delete") },
+                            onClick = {
+                                expanded = false
+                                onDelete(property)
+                            }
+                        )
+                    }
+                }
             }
 
             Text(

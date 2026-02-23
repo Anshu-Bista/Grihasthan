@@ -4,11 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -38,9 +40,12 @@ import com.example.rentalfinder.viewmodel.PropertyViewModel
 class DetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val propertyId = intent.getStringExtra("propertyId")?:""
+
         enableEdgeToEdge()
         setContent {
-            DetailBody()
+            DetailBody(propertyId)
         }
     }
 }
@@ -116,14 +121,13 @@ fun DetailBody(propertyId: String) {
                 // Key Info
                 item {
 
-                    Column (modifier = Modifier.padding(16.dp)) {
-
+                    Column (modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         Text(
                             "Key Information",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
-
                         Spacer(Modifier.height(10.dp))
 
                         Text("City : ${p.city}")
@@ -175,5 +179,4 @@ fun DetailBody(propertyId: String) {
             }
         }
     }
-}
 }

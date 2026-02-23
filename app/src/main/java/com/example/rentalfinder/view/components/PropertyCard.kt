@@ -1,6 +1,7 @@
 package com.example.rentalfinder.view.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -35,12 +36,16 @@ import com.example.rentalfinder.model.PropertyModel
 import com.example.rentalfinder.repository.PropertyRepoImpl
 import com.example.rentalfinder.ui.theme.Gold
 import com.example.rentalfinder.ui.theme.SoftPurple
-import com.example.rentalfinder.viewmodel.PropertyViewModel
 
 @Composable
-fun PropertyCard(property: PropertyModel){
-    Card(modifier = Modifier.fillMaxWidth()
-        .padding(15.dp),
+fun PropertyCard(
+    property: PropertyModel,
+    onClick: ()-> Unit
+){
+    Card(modifier = Modifier
+        .fillMaxWidth()
+        .padding(15.dp)
+        .clickable{onClick()},
             colors = CardDefaults.cardColors(
             containerColor = SoftPurple
             ),
@@ -78,7 +83,7 @@ fun PropertyCard(property: PropertyModel){
             )
 
             Text(
-                text = "${property.city}, ${property.location}",
+                text = "${property.city}, ${property.area}",
                 style = MaterialTheme.typography.bodySmall
             )
             Row(

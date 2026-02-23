@@ -398,7 +398,7 @@ fun AddBody(
                                 categoryId = selectedCategory,
 
                                 city = selectedCity,
-                                location = selectedLocation,
+                                area = selectedLocation,
                                 streetAddress = streetAddress.trim(),
                                 zipCode = pZip,
 

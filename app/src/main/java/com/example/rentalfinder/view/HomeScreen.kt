@@ -1,5 +1,6 @@
 package com.example.rentalfinder.view
 
+import android.content.Intent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -106,7 +107,14 @@ fun HomeScreen(){
         }
 
         items(properties) { property ->
-            PropertyCard(property = property)
+            PropertyCard(
+                property = property,
+                onClick = {
+                    val intent = Intent(context, DetailActivity::class.java)
+                    intent.putExtra("propertyId", property.propertyId)
+                    context.startActivity((intent))
+                }
+            )
         }
     }
 }

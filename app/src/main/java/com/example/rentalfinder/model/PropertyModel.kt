@@ -13,7 +13,7 @@ class PropertyModel(
 
     // Location
     val city: String = "",
-    val location: String = "",
+    val area: String = "",
     val streetAddress: String = "",
     val zipCode: Int = 0,
 
@@ -50,7 +50,7 @@ class PropertyModel(
             // Location (nested map is BEST practice)
             "location" to mapOf(
                 "city" to city,
-                "area" to location,
+                "area" to area,
                 "streetAddress" to streetAddress,
                 "zipCode" to zipCode
             ),

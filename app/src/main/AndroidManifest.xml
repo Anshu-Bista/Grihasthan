@@ -16,13 +16,24 @@
         android:supportsRtl="true"
         tools:replace="android:fullBackupContent">
         <activity
+            android:name=".view.SplashActivity"
+            android:exported="true"
+            android:label="@string/title_activity_splash"
+            android:theme="@style/Theme.RentalFinder">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".view.AddActivity"
             android:exported="true"
             android:label="@string/title_activity_add" />
         <activity
             android:name=".view.DashboardActivity"
             android:exported="true"
-            android:label="@string/title_activity_dashboard"></activity>
+            android:label="@string/title_activity_dashboard" />
         <activity
             android:name=".view.LoginActivity"
             android:exported="true"
@@ -36,11 +47,11 @@
         <activity
             android:name=".view.RegistrationActivity"
             android:exported="true"
-            android:label="@string/title_activity_registration"></activity>
+            android:label="@string/title_activity_registration" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"></activity>
+            android:label="@string/app_name" />
     </application>
 
 </manifest>

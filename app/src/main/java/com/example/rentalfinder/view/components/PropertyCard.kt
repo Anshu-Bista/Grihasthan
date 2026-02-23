@@ -47,7 +47,7 @@ fun PropertyCard(property: PropertyModel){
                     .fillMaxWidth()
                     .height(200.dp),
                 contentScale = ContentScale.Crop,
-                placeholder = painterResource(R.drawable.photo_gallery),
+                placeholder = painterResource(R.drawable.destination),
                 error = painterResource(R.drawable.message)
             )
             Spacer(modifier = Modifier.height(8.dp))

@@ -153,7 +153,9 @@ fun AddBody(
                }
            }
             item {
-                Column (modifier = Modifier.padding(30.dp)){
+                Column (modifier = Modifier.padding(30.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                ){
                     Text("Basic Property Details",style = TextStyle(
                             fontSize = 22.sp,
                         fontWeight = FontWeight.ExtraBold,
@@ -179,7 +181,8 @@ fun AddBody(
 
 
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(vertical = 10.dp),
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         verticalAlignment = Alignment.Top
                     ) {
@@ -211,7 +214,8 @@ fun AddBody(
                 }
             }
             item {
-                Column(modifier = Modifier.padding(30.dp)) {
+                Column(modifier = Modifier.padding(horizontal = 30.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text("Location Details",style = TextStyle(
                         fontSize = 22.sp,
                         fontWeight = FontWeight.ExtraBold,
@@ -253,7 +257,8 @@ fun AddBody(
                 }
             }
             item {
-                Column(modifier = Modifier.padding(30.dp)
+                Column(modifier = Modifier.padding(horizontal = 30.dp, vertical = 20.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     Text("Amenities Section", style = TextStyle(
                         fontSize = 22.sp,
@@ -278,7 +283,8 @@ fun AddBody(
             }
 
             item {
-                Column(modifier = Modifier.padding(30.dp)
+                Column(modifier = Modifier.padding(horizontal = 30.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ){
                     Text("Lease and Furnishing Details", style = TextStyle(
                         fontSize = 22.sp,

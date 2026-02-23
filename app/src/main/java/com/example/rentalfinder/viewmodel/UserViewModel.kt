@@ -53,10 +53,6 @@ class UserViewModel(val repo: UserRepo) : ViewModel() {
     val users : MutableLiveData<UserModel?>  //_usersko getter
         get() = _users
 
-    private val _allUsers = MutableLiveData<List<UserModel>?>()
-    val allusers : MutableLiveData<List<UserModel>?>
-        get() = _allUsers
-
     fun getUserById(
         userId: String
     ){
@@ -67,6 +63,10 @@ class UserViewModel(val repo: UserRepo) : ViewModel() {
             }
         }
     }
+
+    private val _allUsers = MutableLiveData<List<UserModel>?>()
+    val allusers : MutableLiveData<List<UserModel>?>
+        get() = _allUsers
 
     fun getAllUserById(){
         repo.getAllUserById{

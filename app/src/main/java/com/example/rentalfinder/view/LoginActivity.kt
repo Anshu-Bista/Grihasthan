@@ -50,14 +50,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.rentalfinder.R
 import com.example.rentalfinder.repository.UserRepoImpl
-import com.example.rentalfinder.ui.theme.Blue
 import com.example.rentalfinder.ui.theme.DarkGrey
 import com.example.rentalfinder.ui.theme.ForestGreen
-import com.example.rentalfinder.ui.theme.Gold
-import com.example.rentalfinder.ui.theme.Gray
 import com.example.rentalfinder.ui.theme.MintGreen
 import com.example.rentalfinder.ui.theme.OffWhite
-import com.example.rentalfinder.ui.theme.Purple80
 import com.example.rentalfinder.ui.theme.SandBiege
 import com.example.rentalfinder.viewmodel.UserViewModel
 

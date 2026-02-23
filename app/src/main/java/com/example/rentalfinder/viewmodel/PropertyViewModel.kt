@@ -62,11 +62,16 @@ class PropertyViewModel(val repo: PropertyRepo): ViewModel() {
             }
         }
     }
+    private val _categoryProperties = MutableLiveData<List<PropertyModel>>(emptyList())
+    val categoryProperties: MutableLiveData<List<PropertyModel>> = _categoryProperties
 
-    fun getPropertiesByCategory(
-        categoryId: String,
-        callback: (Boolean, String, List<PropertyModel>?) -> Unit
-    ) {
-        repo.getPropertiesByCategory(categoryId, callback)
+    fun getPropertiesByCategory(categoryId: String){
+
+        repo.getPropertiesByCategory(categoryId){ success, _, list ->
+
+            if(success){
+                _categoryProperties.postValue(list ?: emptyList())
+            }
+        }
     }
 }

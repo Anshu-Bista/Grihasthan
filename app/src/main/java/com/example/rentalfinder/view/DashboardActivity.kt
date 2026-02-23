@@ -52,7 +52,7 @@ fun DashboardBody(){
     var selectedIndex by remember { mutableStateOf(0) }
 
     val listItems = listOf(
-        NavItem(label = "Home", R.drawable.home),
+        NavItem(label = "Home", R.drawable.baseline_home_24),
         NavItem(label = "Search", R.drawable.baseline_search_24),
         NavItem(label = "Profile", R.drawable.baseline_person_24)
     )

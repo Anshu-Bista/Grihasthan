@@ -54,42 +54,6 @@ fun HomeScreen(){
             .fillMaxSize()
     ) {
 
-        // Search Bar
-        item {
-            OutlinedTextField(
-                value = search,
-                onValueChange = { search = it },
-                placeholder = { Text("Search here |") },
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.baseline_search_24),
-                        contentDescription = null
-                    )
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-
-        // Location Row
-        item {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp)
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.baseline_location_on_24),
-                    contentDescription = null,
-                    modifier = Modifier.padding(end = 10.dp)
-                )
-
-                Column(modifier = Modifier.weight(1f)) {
-                    Text("Location", fontSize = 18.sp)
-                    Text("St. no. 8, Karangi, Khi")
-                }
-            }
-        }
-
         // Empty State
         if (properties.isEmpty()) {
             item {

@@ -116,7 +116,8 @@ fun DetailBody(propertyId: String) {
                             contentDescription = "Property Image",
                             modifier = Modifier
                                 .fillMaxSize(),
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.Crop,
+                            error = painterResource(R.drawable.property),
                         )
 
                         // ⭐ BACK BUTTON (Top Left)

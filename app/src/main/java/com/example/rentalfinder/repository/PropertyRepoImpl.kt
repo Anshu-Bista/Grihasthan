@@ -104,6 +104,23 @@ class PropertyRepoImpl: PropertyRepo {
         categoryId: String,
         callback: (Boolean, String, List<PropertyModel>?) -> Unit
     ) {
-        TODO("Not yet implemented")
+
+        ref.orderByChild("categoryId")
+            .equalTo(categoryId)
+            .get()
+            .addOnSuccessListener { snapshot ->
+
+                val list = mutableListOf<PropertyModel>()
+
+                snapshot.children.forEach {
+                    val model = it.getValue(PropertyModel::class.java)
+                    model?.let { list.add(it) }
+                }
+
+                callback(true, "Success", list)
+            }
+            .addOnFailureListener {
+                callback(false, it.message ?: "Failed", null)
+            }
     }
 }

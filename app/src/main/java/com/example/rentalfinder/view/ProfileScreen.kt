@@ -19,12 +19,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.example.rentalfinder.repository.CommonRepoImpl
 import com.example.rentalfinder.repository.UserRepoImpl
 import com.example.rentalfinder.viewmodel.UserViewModel
 import com.example.rentalfinder.utils.ImageUtils
 import com.example.rentalfinder.ui.theme.*
+import com.example.rentalfinder.R
 import com.example.rentalfinder.view.components.FormField
 import com.example.rentalfinder.viewmodel.CommonViewModel
 
@@ -103,40 +107,24 @@ fun ProfileScreen() {
                         modifier = Modifier
                             .size(120.dp)
                             .background(Gold, RoundedCornerShape(100.dp))
-                            .clickable {
-                                imageUtils.launchImagePicker()
-                            },
+                            .clickable { imageUtils.launchImagePicker() },
                         contentAlignment = Alignment.Center
                     ) {
 
-                        when {
-                            selectedImageUri != null -> {
-                                AsyncImage(
-                                    model = selectedImageUri,
-                                    contentDescription = "Profile Image",
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentScale = ContentScale.Crop
-                                )
+                        val imageModel =
+                            when {
+                                selectedImageUri != null -> selectedImageUri
+                                u.imageUrl.isNotEmpty() -> u.imageUrl
+                                else -> null
                             }
 
-                            u.imageUrl.isNotEmpty() -> {
-                                AsyncImage(
-                                    model = u.imageUrl,
-                                    contentDescription = "Profile Image",
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentScale = ContentScale.Crop
-                                )
-                            }
-
-                            else -> {
-                                Text(
-                                    text = firstName.firstOrNull()?.toString() ?: "U",
-                                    fontSize = 40.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = OffWhite
-                                )
-                            }
-                        }
+                        AsyncImage(
+                            model = imageModel,
+                            contentDescription = "Profile Image",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop,
+                            error = painterResource(R.drawable.baseline_person_24),
+                        )
                     }
 
                     Spacer(Modifier.height(10.dp))
@@ -242,6 +230,10 @@ fun ProfileScreen() {
 
                                 viewModel.editProfile(updatedUser){ success, msg ->
                                     Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                                    if(success){
+                                        // ⭐ Refresh UI data
+                                        viewModel.getUserById(userId)
+                                    }
                                 }
                             }
 

@@ -20,11 +20,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.layout.ContentScale
 import coil3.compose.AsyncImage
+import com.example.rentalfinder.repository.CommonRepoImpl
 import com.example.rentalfinder.repository.UserRepoImpl
 import com.example.rentalfinder.viewmodel.UserViewModel
 import com.example.rentalfinder.utils.ImageUtils
 import com.example.rentalfinder.ui.theme.*
 import com.example.rentalfinder.view.components.FormField
+import com.example.rentalfinder.viewmodel.CommonViewModel
 
 @Composable
 fun ProfileScreen() {
@@ -33,6 +35,9 @@ fun ProfileScreen() {
 
     val repo = remember { UserRepoImpl() }
     val viewModel = remember { UserViewModel(repo) }
+
+    val commonRepo = remember { CommonRepoImpl() }
+    val commonViewModel = remember { CommonViewModel(commonRepo) }
 
     val userId = com.google.firebase.auth.FirebaseAuth
         .getInstance()
@@ -224,22 +229,44 @@ fun ProfileScreen() {
                     Button(
                         onClick = {
 
-                            val updatedUser = u.copy(
-                                firstName = firstName,
-                                lastName = lastName,
-                                email = email,
-                                gender = gender,
-                                dob = dob,
-                                imageUrl = u.imageUrl
-                            )
-                            viewModel.editProfile(updatedUser) { success, msg ->
-                                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                            fun saveProfile(imageUrl: String){
+
+                                val updatedUser = u.copy(
+                                    firstName = firstName,
+                                    lastName = lastName,
+                                    email = email,
+                                    gender = gender,
+                                    dob = dob,
+                                    imageUrl = imageUrl
+                                )
+
+                                viewModel.editProfile(updatedUser){ success, msg ->
+                                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                                }
+                            }
+
+                            // ⭐ Image upload using CommonViewModel (NOT ImageUtils)
+                            if(selectedImageUri != null){
+
+                                commonViewModel.uploadImage(context, selectedImageUri!!){ uploadedUrl ->
+
+                                    if(uploadedUrl != null){
+                                        saveProfile(uploadedUrl)
+                                    }else{
+                                        Toast.makeText(context, "Image upload failed", Toast.LENGTH_SHORT).show()
+                                    }
+
+                                }
+
+                            }else{
+                                // ⭐ Keep existing image
+                                saveProfile(u.imageUrl)
                             }
 
                         },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(containerColor = Gold)
-                    ) {
+                    ){
                         Text("Save Profile")
                     }
                 }

@@ -1,6 +1,7 @@
 package com.example.rentalfinder.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -36,6 +37,9 @@ import com.example.rentalfinder.ui.theme.Gold
 import com.example.rentalfinder.ui.theme.MintGreen
 import com.example.rentalfinder.view.ui.theme.RentalFinderTheme
 import com.example.rentalfinder.viewmodel.PropertyViewModel
+import coil3.request.ImageRequest
+import androidx.compose.ui.platform.LocalContext
+import coil3.request.crossfade
 
 class DetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,19 +71,34 @@ fun DetailBody(propertyId: String) {
     Scaffold(
         containerColor = MintGreen
     ) { padding ->
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
         ) {
 
-            property?.let { p ->
+            if (property == null) {
 
-                // Image
                 item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(40.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+            } else {
+                val p = property!!
+                // IMAGE
+                item {
+                    val context = LocalContext.current
                     AsyncImage(
-                        model = p.imageUrl,
+                        model = ImageRequest.Builder(context)
+                            .data(p.imageUrl)
+                            .crossfade(true)
+                            .build(),
                         contentDescription = "Property Image",
                         modifier = Modifier
                             .fillMaxWidth()

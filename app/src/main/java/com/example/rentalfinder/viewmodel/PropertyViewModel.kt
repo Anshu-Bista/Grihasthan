@@ -20,11 +20,19 @@ class PropertyViewModel(val repo: PropertyRepo): ViewModel() {
         repo.editProperty(model, callback)
     }
 
+
     fun deleteProperty(
         propertyId: String,
         callback: (Boolean, String) -> Unit
     ) {
-        repo.deleteProperty(propertyId, callback)
+        repo.deleteProperty(propertyId) { success, message ->
+
+            if (success) {
+                getAllProperties()   // refresh list
+            }
+
+            callback(success, message)
+        }
     }
 
     private val _properties = MutableLiveData<PropertyModel?>()

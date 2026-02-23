@@ -1,6 +1,7 @@
 package com.example.rentalfinder.view
 
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -109,10 +110,22 @@ fun HomeScreen(){
         items(properties) { property ->
             PropertyCard(
                 property = property,
-                onClick = {
+                onClick = { prop ->
                     val intent = Intent(context, DetailActivity::class.java)
-                    intent.putExtra("propertyId", property.propertyId)
-                    context.startActivity((intent))
+                    intent.putExtra("propertyId", prop.propertyId)
+                    context.startActivity(intent)
+                },
+
+                onEdit = { prop ->
+                    val intent = Intent(context, AddActivity::class.java)
+                    intent.putExtra("propertyId", prop.propertyId)
+                    context.startActivity(intent)
+                },
+
+                onDelete = { prop ->
+                    propertyViewModel.deleteProperty(prop.propertyId) { success, msg ->
+                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                    }
                 }
             )
         }

@@ -2,6 +2,7 @@ package com.example.rentalfinder.view.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,7 +14,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,12 +44,16 @@ import com.example.rentalfinder.ui.theme.SoftPurple
 @Composable
 fun PropertyCard(
     property: PropertyModel,
-    onClick: ()-> Unit
+    onEdit: (PropertyModel) -> Unit,
+    onDelete: (PropertyModel) -> Unit,
+    onClick: (PropertyModel) -> Unit
 ){
+    var expanded by remember { mutableStateOf(false) }
+
     Card(modifier = Modifier
         .fillMaxWidth()
         .padding(15.dp)
-        .clickable{onClick()},
+        .clickable { onClick(property) },
             colors = CardDefaults.cardColors(
             containerColor = SoftPurple
             ),
@@ -53,6 +61,45 @@ fun PropertyCard(
         elevation = CardDefaults.cardElevation(6.dp)
 
     ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Box {
+
+                IconButton(onClick = { expanded = true }) {
+                    Icon(
+                        painter = painterResource(R.drawable.baseline_more_vert_24),
+                        contentDescription = "Menu", tint = Gold
+                    )
+                }
+
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+
+                    DropdownMenuItem(
+                        text = { Text("Edit") },
+                        onClick = {
+                            expanded = false
+                            onEdit(property)
+                        }
+                    )
+
+                    DropdownMenuItem(
+                        text = { Text("Delete") },
+                        onClick = {
+                            expanded = false
+                            onDelete(property)
+                        }
+                    )
+                }
+            }
+        }
         Column(modifier = Modifier.fillMaxWidth()
             .padding(10.dp)
         ) {

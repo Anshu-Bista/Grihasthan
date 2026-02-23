@@ -16,6 +16,11 @@
         android:supportsRtl="true"
         tools:replace="android:fullBackupContent">
         <activity
+            android:name=".view.DetailActivity"
+            android:exported="false"
+            android:label="@string/title_activity_detail"
+            android:theme="@style/Theme.RentalFinder" />
+        <activity
             android:name=".view.SplashActivity"
             android:exported="true"
             android:label="@string/title_activity_splash"

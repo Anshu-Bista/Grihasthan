@@ -36,14 +36,6 @@ class UserViewModel(val repo: UserRepo) : ViewModel() {
         repo.forgetPassword(email,callback)
     }
 
-    fun deleteAccount(
-        userId: String,
-        callback: (Boolean, String) -> Unit
-    ){
-        repo.deleteAccount(userId,callback)
-    }
-
-
     fun editProfile(model: UserModel, callback: (Boolean, String) -> Unit) {
 
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return

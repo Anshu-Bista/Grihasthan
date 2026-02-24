@@ -1,7 +1,6 @@
 package com.example.rentalfinder
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
@@ -36,7 +35,7 @@ class RegistrationInstrumentedTest {
     fun registerUserSuccessNavigatesToLogin() {
 
         composeRule.onNodeWithTag("reg_email")
-            .performTextInput("testuser@gmail.com")
+            .performTextInput("testinstrument@gmail.com")
 
         composeRule.onNodeWithTag("reg_password")
             .performTextInput("Test12345")
@@ -50,13 +49,12 @@ class RegistrationInstrumentedTest {
         composeRule.onNodeWithTag("signup_button")
             .performClick()
 
+        // Wait for Firebase + Navigation
         composeRule.waitForIdle()
-
-        Thread.sleep(2000)
+        Thread.sleep(4000)
 
         Intents.intended(
             hasComponent(LoginActivity::class.java.name)
         )
     }
-
 }

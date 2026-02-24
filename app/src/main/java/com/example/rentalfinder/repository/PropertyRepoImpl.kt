@@ -61,21 +61,31 @@ class PropertyRepoImpl: PropertyRepo {
         propertyId: String,
         callback: (Boolean, String, PropertyModel?) -> Unit
     ) {
-        ref.child(propertyId).addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()){
-                    var data = snapshot.getValue(PropertyModel::class.java)
-                    if(data!= null){
-                        callback(true, "Property fetched", data)
+
+        ref.child(propertyId)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    if (snapshot.exists()) {
+
+                        val data = snapshot.getValue(PropertyModel::class.java)
+
+                        if (data != null) {
+                            callback(true, "Property fetched", data)
+                        } else {
+                            callback(false, "Property data null", null)
+                        }
+
+                    } else {
+                        callback(false, "Property not found", null)
                     }
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                callback(false, error.message, null)
-            }
-
-        })
+                override fun onCancelled(error: DatabaseError) {
+                    callback(false, error.message, null)
+                }
+            })
     }
 
     override fun getAllProperties(callback: (Boolean, String, List<PropertyModel>?) -> Unit) {

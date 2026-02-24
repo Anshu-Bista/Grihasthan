@@ -61,6 +61,7 @@ class DetailActivity : ComponentActivity() {
     }
 }
 
+
 @Composable
 fun DetailBody(propertyId: String) {
 
@@ -70,59 +71,70 @@ fun DetailBody(propertyId: String) {
 
     val property by viewModel.properties.observeAsState()
 
-    // Fetch property once
+    // 🔥 FETCH PROPERTY
     LaunchedEffect(propertyId) {
         Log.d("DETAIL_PAGE", "PropertyID = $propertyId")
         viewModel.getPropertyById(propertyId)
     }
 
+    // 🔥 LOG PROPERTY WHEN RECEIVED
+    LaunchedEffect(property) {
+        if (property != null) {
+            Log.d("DETAIL_PAGE", "FULL PROPERTY OBJECT = $property")
+            Log.d("DETAIL_PAGE", "IMAGE URL = ${property?.imageUrl}")
+
+            if (property?.imageUrl.isNullOrEmpty()) {
+                Log.d("DETAIL_PAGE", "⚠ IMAGE URL IS NULL OR EMPTY")
+            } else {
+                Log.d("DETAIL_PAGE", "✅ IMAGE URL IS NOT NULL")
+            }
+        }
+    }
+
     Scaffold(
         containerColor = MintGreen
     ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-        ) {
 
-            if (property == null) {
+        if (property == null) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
 
+            val p = property!!
+            val context = LocalContext.current
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+            ) {
+
+                // 🔥 IMAGE SECTION
                 item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(40.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                }
-            } else {
-                val p = property!!
-                // IMAGE
-                item {
-                    val context = LocalContext.current
-
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(280.dp)
                     ) {
 
-                        // ⭐ PROPERTY IMAGE
                         AsyncImage(
-                            model = ImageRequest.Builder(context)
-                                .data(p.imageUrl)
-                                .crossfade(true)
-                                .build(),
+                            model = p.imageUrl,
                             contentDescription = "Property Image",
-                            modifier = Modifier
-                                .fillMaxSize(),
+                            modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Crop,
-                            error = painterResource(R.drawable.property),
+                            onError = { state ->
+                                Log.d("DETAIL_PAGE", "COIL ERROR = ${state.result.throwable}")
+                            },
+                            onSuccess = {
+                                Log.d("DETAIL_PAGE", "COIL SUCCESS")
+                            }
                         )
-
-                        // ⭐ BACK BUTTON (Top Left)
                         IconButton(
                             onClick = {
                                 context.startActivity(
@@ -135,12 +147,14 @@ fun DetailBody(propertyId: String) {
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.baseline_arrow_back_ios_24),
-                                contentDescription = "Menu", tint = ForestGreen
+                                contentDescription = "Back",
+                                tint = ForestGreen
                             )
                         }
                     }
                 }
-                // Title
+
+                // TITLE
                 item {
                     Text(
                         text = p.title,
@@ -150,7 +164,7 @@ fun DetailBody(propertyId: String) {
                     )
                 }
 
-                // Price
+                // PRICE
                 item {
                     Text(
                         text = "Rs. ${p.price} / month",
@@ -161,7 +175,7 @@ fun DetailBody(propertyId: String) {
                     )
                 }
 
-                // Description
+                // DESCRIPTION
                 item {
                     Text(
                         text = p.description,
@@ -170,18 +184,12 @@ fun DetailBody(propertyId: String) {
                     )
                 }
 
-                // Key Info
+                // KEY INFO
                 item {
-
-                    Column (modifier = Modifier.padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Text(
-                            "Key Information",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(Modifier.height(10.dp))
-
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
                         Text("City : ${p.city}")
                         Text("Area : ${p.area}")
                         Text("Street : ${p.streetAddress}")
@@ -194,9 +202,8 @@ fun DetailBody(propertyId: String) {
                     }
                 }
 
-                // Amenities
+                // AMENITIES
                 if (p.amenities.isNotEmpty()) {
-
                     item {
                         Text(
                             "Amenities",
@@ -211,21 +218,6 @@ fun DetailBody(propertyId: String) {
                             text = "• $amenity",
                             modifier = Modifier.padding(horizontal = 20.dp, vertical = 4.dp)
                         )
-                    }
-                }
-
-            }
-
-            // Loading / Empty State
-            if (property == null) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(40.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
                     }
                 }
             }

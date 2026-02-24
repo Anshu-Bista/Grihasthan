@@ -3,6 +3,7 @@ package com.example.rentalfinder.view
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
@@ -59,6 +60,7 @@ fun ProfileScreen() {
     LaunchedEffect(Unit) {
         imageUtils.registerLaunchers {
             selectedImageUri = it
+            Log.d("PROFILE_IMG", "Selected Image URI: $it")
         }
     }
 

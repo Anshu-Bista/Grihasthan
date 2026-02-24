@@ -45,6 +45,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import coil3.request.crossfade
 import com.example.rentalfinder.R
+import com.example.rentalfinder.ui.theme.ForestGreen
 import com.example.rentalfinder.ui.theme.OffWhite
 
 class DetailActivity : ComponentActivity() {
@@ -71,6 +72,7 @@ fun DetailBody(propertyId: String) {
 
     // Fetch property once
     LaunchedEffect(propertyId) {
+        Log.d("DETAIL_PAGE", "PropertyID = $propertyId")
         viewModel.getPropertyById(propertyId)
     }
 
@@ -133,7 +135,7 @@ fun DetailBody(propertyId: String) {
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.baseline_arrow_back_ios_24),
-                                contentDescription = "Menu", tint = Gold
+                                contentDescription = "Menu", tint = ForestGreen
                             )
                         }
                     }

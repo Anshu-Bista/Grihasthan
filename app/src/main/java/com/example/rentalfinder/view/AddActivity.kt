@@ -183,70 +183,76 @@ fun AddBody(
             .padding(innerPadding)
         ) {
             item {
-                Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-                verticalAlignment = Alignment.Top,
-            ) {
 
-                // ⭐ BACK BUTTON (Top aligned)
-                IconButton(
-                    onClick = {
-                    context.startActivity(
-                        Intent(context, DashboardActivity::class.java)
-                    )
-                },
-                    modifier = Modifier
-                        .padding(top = 8.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.baseline_arrow_back_ios_24),
-                        contentDescription = "Back",
-                        tint = Gold
-                    )
-                }
+                val context = LocalContext.current
 
-                // ⭐ IMAGE PREVIEW
                 Box(
                     modifier = Modifier
-                        .weight(1f)
-                        .height(200.dp)
-                        .clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() }
-                        ) {
-                            onPickImage()
-                        }
+                        .fillMaxWidth()
+                        .padding(10.dp)
+                        .height(220.dp)
                 ) {
 
-                    if (selectedImageUri != null) {
-                        AsyncImage(
-                            model = selectedImageUri,
-                            contentDescription = "Selected Image",
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop
-                        )
+                    // ⭐ IMAGE PREVIEW + CAMERA CLICK (BOTTOM LAYER)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .padding(10.dp)
+                            .align(Alignment.BottomCenter)
+                            .clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() }
+                            ) {
+                                onPickImage()
+                            }
+                    ) {
 
-                    } else if (existingImageUrl != null) {
-                        AsyncImage(
-                            model = existingImageUrl,
-                            contentDescription = "Existing Image",
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop
-                        )
+                        if (selectedImageUri != null) {
+                            AsyncImage(
+                                model = selectedImageUri,
+                                contentDescription = "Selected Image",
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop
+                            )
 
-                    } else {
-                        Image(
-                            painter = painterResource(R.drawable.baseline_camera_alt_24),
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop
+                        } else if (existingImageUrl != null) {
+                            AsyncImage(
+                                model = existingImageUrl,
+                                contentDescription = "Existing Image",
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop
+                            )
+
+                        } else {
+                            Image(
+                                painter = painterResource(R.drawable.baseline_camera_alt_24),
+                                contentDescription = "Camera",
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                    }
+
+                    // ⭐ BACK BUTTON (TOP LAYER — NO CLICK INTERFERENCE)
+                    IconButton(
+                        onClick = {
+                            context.startActivity(
+                                Intent(context, DashboardActivity::class.java)
+                            )
+                        },
+                        modifier = Modifier
+                            .align(Alignment.TopStart)
+                            .padding(8.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.baseline_arrow_back_ios_24),
+                            contentDescription = "Back",
+                            tint = ForestGreen
                         )
                     }
                 }
             }
-        }
             item {
                 Column (modifier = Modifier.padding(30.dp),
                         verticalArrangement = Arrangement.spacedBy(10.dp)

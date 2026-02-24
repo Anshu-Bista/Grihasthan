@@ -47,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -156,7 +157,8 @@ fun RegistrationBody(){
                     ),
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.fillMaxWidth()
-                        .padding(horizontal = 30.dp),
+                        .padding(horizontal = 30.dp)
+                        .testTag("reg_email"),
                     leadingIcon = {
                         Icon(painter = painterResource(R.drawable.baseline_email_24),
                             contentDescription = null,
@@ -178,7 +180,8 @@ fun RegistrationBody(){
                     ),
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.fillMaxWidth()
-                        .padding(horizontal = 30.dp),
+                        .padding(horizontal = 30.dp)
+                        .testTag("reg_password"),
                     visualTransformation = if (visibility) VisualTransformation.None
                     else
                         PasswordVisualTransformation(),
@@ -213,7 +216,8 @@ fun RegistrationBody(){
                     ),
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.fillMaxWidth()
-                        .padding(horizontal = 30.dp),
+                        .padding(horizontal = 30.dp)
+                        .testTag("reg_confirm_password"),
                     visualTransformation = if (visibility) VisualTransformation.None
                     else
                         PasswordVisualTransformation(),
@@ -241,6 +245,7 @@ fun RegistrationBody(){
                 verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(checked = checkbox,
                     onCheckedChange = {checkbox=it},
+                    modifier = Modifier.testTag("terms_checkbox"),
                     colors = CheckboxDefaults.colors(
                         checkedColor = ForestGreen,
                         checkmarkColor = SandBiege
@@ -291,7 +296,9 @@ fun RegistrationBody(){
                     border = BorderStroke(0.dp, Color.Transparent),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 20.dp),
+                        .padding(top = 20.dp)
+
+                        .testTag("signup_button"),
                     colors = ButtonDefaults.buttonColors(containerColor = Gold),
 
                 ) {

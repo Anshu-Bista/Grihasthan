@@ -41,6 +41,10 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.rentalfinder.model.PropertyModel
 import com.example.rentalfinder.repository.PropertyRepoImpl
+import com.example.rentalfinder.ui.theme.Dark
+import com.example.rentalfinder.ui.theme.DarkGreen
+import com.example.rentalfinder.ui.theme.DarkGrey
+import com.example.rentalfinder.ui.theme.ForestGreen
 import com.example.rentalfinder.ui.theme.Gold
 import com.example.rentalfinder.ui.theme.OffWhite
 import com.example.rentalfinder.ui.theme.SoftPurple
@@ -94,7 +98,8 @@ fun PropertyCard(
                 Text(
                     text = "Rs. ${property.price}",
                     fontSize = 16.sp,   // slightly smaller
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = ForestGreen
                 )
 
                 Box {
@@ -134,13 +139,15 @@ fun PropertyCard(
             Text(
                 text = property.title,
                 fontSize = 15.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
+                color = DarkGreen
             )
 
             Text(
                 text = "${property.city}, ${property.area}",
                 fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = DarkGrey,
+
             )
 
             Spacer(modifier = Modifier.height(6.dp))
@@ -185,7 +192,8 @@ fun InfoIconText(icon: Int, value: String) {
         Spacer(modifier = Modifier.width(4.dp))
         Text(
             text = value,
-            fontSize = 12.sp
+            fontSize = 12.sp,
+            color = Dark,
         )
     }
 }

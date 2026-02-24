@@ -276,7 +276,7 @@ fun AddBody(
                     CommonDropdown(
                         selectedItem = selectedCategory,
                         label = "Category",
-                        items = listOf("Apartment", "Pokhara", "Lalitpur"),
+                        items = listOf("Apartment", "House", "Room", "Office"),
                         onItemSelected = { selectedCategory = it }
                     )
 
@@ -292,7 +292,7 @@ fun AddBody(
                             label = "Price/month (NPR)",
                             value = price,
                             onValueChange = { price = it },
-                            maxDigits = 7, // adjust as needed
+                            maxDigits = 7,
                             modifier = Modifier.weight(1f)
                         )
 

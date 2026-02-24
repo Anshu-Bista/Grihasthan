@@ -2,6 +2,7 @@ package com.example.rentalfinder.view
 
 import android.content.Intent
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -26,12 +28,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.rentalfinder.repository.PropertyRepoImpl
+import com.example.rentalfinder.ui.theme.ForestGreen
+import com.example.rentalfinder.ui.theme.Gold
 import com.example.rentalfinder.view.components.PropertyCard
 import com.example.rentalfinder.viewmodel.PropertyViewModel
 
@@ -51,7 +57,7 @@ fun HomeScreen(){
 
     LazyColumn(
         modifier = Modifier
-            .padding(10.dp)
+            .padding(30.dp)
             .fillMaxSize()
     ) {
         item {
@@ -59,12 +65,13 @@ fun HomeScreen(){
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(30.dp,)
             ) {
 
                 Text(
-                    text = "🏡 Welcome to Grihasthan",
+                    text = "Welcome to Grihasthan",
                     fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = ForestGreen,
                     style = MaterialTheme.typography.titleLarge
                 )
 
@@ -73,24 +80,117 @@ fun HomeScreen(){
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Spacer(modifier = Modifier.padding(12.dp))
 
-                FeatureRow(
-                    icon = R.drawable.baseline_search_24,
-                    text = "Search verified rental properties easily"
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
 
-                FeatureRow(
-                    icon = R.drawable.baseline_home_24,
-                    text = "List your property and reach renters"
-                )
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(8.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
 
-                FeatureRow(
-                    icon = R.drawable.baseline_person_24,
-                    text = "Connect renters and property owners directly"
-                )
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+                            Box(
+                                modifier = Modifier
+                                    .background(
+                                        MaterialTheme.colorScheme.surfaceVariant,
+                                        shape = CircleShape
+                                    )
+                                    .padding(14.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.baseline_search_24),
+                                    tint = Gold,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(28.dp)
+                                )
+                            }
+
+                            Text("Browse")
+                        }
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(8.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+                            Box(
+                                modifier = Modifier
+                                    .background(
+                                        MaterialTheme.colorScheme.surfaceVariant,
+                                        shape = CircleShape
+                                    )
+                                    .padding(14.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.baseline_add_24),
+                                    tint = Gold,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(28.dp)
+                                )
+                            }
+
+                            Text("Add")
+                        }
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(8.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+                            Box(
+                                modifier = Modifier
+                                    .background(
+                                        MaterialTheme.colorScheme.surfaceVariant,
+                                        shape = CircleShape
+
+                                    )
+                                    .padding(14.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.baseline_person_24),
+                                    tint = Gold,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(28.dp)
+                                )
+                            }
+
+                            Text("Connect")
+                        }
+                    }
+                }
             }
+        }
+
+        item{
+            Text(
+                text = "Featured Listings",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium,
+                color = ForestGreen,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 20.dp, bottom = 10.dp),
+            )
         }
 
         // Empty State

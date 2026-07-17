@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- You can leave this empty or remove it entirely -->
 
     <style name="Theme.RentalFinder" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>

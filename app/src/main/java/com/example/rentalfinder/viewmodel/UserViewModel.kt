@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.rentalfinder.model.UserModel
 import com.example.rentalfinder.repository.UserRepo
+import com.google.firebase.auth.FirebaseAuth
 
 class UserViewModel(val repo: UserRepo) : ViewModel() {
 
@@ -35,27 +36,16 @@ class UserViewModel(val repo: UserRepo) : ViewModel() {
         repo.forgetPassword(email,callback)
     }
 
-    fun deleteAccount(
-        userId: String,
-        callback: (Boolean, String) -> Unit
-    ){
-        repo.deleteAccount(userId,callback)
-    }
+    fun editProfile(model: UserModel, callback: (Boolean, String) -> Unit) {
 
-    fun editProfile(
-        userId: String, model: UserModel,
-        callback: (Boolean, String) -> Unit
-    ){
-        repo.editProfile(userId,model,callback)
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        repo.editProfile(uid, model, callback)
     }
 
     private val _users = MutableLiveData<UserModel?>()  //real time data trackking
     val users : MutableLiveData<UserModel?>  //_usersko getter
         get() = _users
-
-    private val _allUsers = MutableLiveData<List<UserModel>?>()
-    val allusers : MutableLiveData<List<UserModel>?>
-        get() = _allUsers
 
     fun getUserById(
         userId: String
@@ -67,6 +57,10 @@ class UserViewModel(val repo: UserRepo) : ViewModel() {
             }
         }
     }
+
+    private val _allUsers = MutableLiveData<List<UserModel>?>()
+    val allusers : MutableLiveData<List<UserModel>?>
+        get() = _allUsers
 
     fun getAllUserById(){
         repo.getAllUserById{

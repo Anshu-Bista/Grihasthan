@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -50,14 +51,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.rentalfinder.R
 import com.example.rentalfinder.repository.UserRepoImpl
-import com.example.rentalfinder.ui.theme.Blue
 import com.example.rentalfinder.ui.theme.DarkGrey
 import com.example.rentalfinder.ui.theme.ForestGreen
-import com.example.rentalfinder.ui.theme.Gold
-import com.example.rentalfinder.ui.theme.Gray
 import com.example.rentalfinder.ui.theme.MintGreen
 import com.example.rentalfinder.ui.theme.OffWhite
-import com.example.rentalfinder.ui.theme.Purple80
 import com.example.rentalfinder.ui.theme.SandBiege
 import com.example.rentalfinder.viewmodel.UserViewModel
 
@@ -133,19 +130,24 @@ fun LoginBody(){
                     value = email,
                     onValueChange = { data -> email = data },
                     placeholder = { Text("abc@gmail.com") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 30.dp)
+                        .testTag("email"),
+
+                    shape = RoundedCornerShape(12.dp),
                     colors = TextFieldDefaults.colors(
                         unfocusedContainerColor = MintGreen,
                         focusedContainerColor = MintGreen,
                         focusedIndicatorColor = SandBiege,
                         unfocusedIndicatorColor = Color.Transparent
                     ),
-                    shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(horizontal = 30.dp),
                     leadingIcon = {
-                        Icon(painter = painterResource(R.drawable.baseline_email_24),
+                        Icon(
+                            painter = painterResource(R.drawable.baseline_email_24),
                             contentDescription = null,
-                            tint = ForestGreen )
+                            tint = ForestGreen
+                        )
                     }
                 )
 
@@ -155,33 +157,44 @@ fun LoginBody(){
                     value = password,
                     onValueChange = { data -> password = data },
                     placeholder = { Text("*********") },
+
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 30.dp)
+                        .testTag("password"),
+
+                    visualTransformation =
+                        if (visibility) VisualTransformation.None
+                        else PasswordVisualTransformation(),
+
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.baseline_lock_24),
+                            contentDescription = null,
+                            tint = ForestGreen
+                        )
+                    },
+
+                    trailingIcon = {
+                        IconButton(onClick = { visibility = !visibility }) {
+                            Icon(
+                                painter = if (visibility)
+                                    painterResource(R.drawable.baseline_visibility_off_24)
+                                else
+                                    painterResource(R.drawable.baseline_visibility_24),
+                                contentDescription = null,
+                                tint = ForestGreen
+                            )
+                        }
+                    },
+
+                    shape = RoundedCornerShape(12.dp),
                     colors = TextFieldDefaults.colors(
                         unfocusedContainerColor = MintGreen,
                         focusedContainerColor = MintGreen,
                         focusedIndicatorColor = SandBiege,
                         unfocusedIndicatorColor = Color.Transparent
-                    ),
-                    shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(horizontal = 30.dp),
-                    visualTransformation = if (visibility) VisualTransformation.None
-                    else
-                        PasswordVisualTransformation(),
-                    leadingIcon = {
-                        Icon(painter = painterResource(R.drawable.baseline_lock_24),
-                            contentDescription = null,
-                            tint = ForestGreen )
-                    },
-                    trailingIcon = {
-                        IconButton(onClick = {visibility = !visibility}){
-                            Icon(painter = if (visibility)
-                                painterResource(R.drawable.baseline_visibility_off_24)
-                            else
-                                painterResource(R.drawable.baseline_visibility_24),
-                                contentDescription = null,
-                                tint = ForestGreen )
-                        }
-                    }
+                    )
                 )
 
             }
@@ -204,24 +217,39 @@ fun LoginBody(){
                         }
                 )
 
-                OutlinedButton(onClick = {
-                        userViewModel.login(email, password){
-                                success, message->
-                            if(success){
+                OutlinedButton(
+                    onClick = {
+                        userViewModel.login(email, password) { success, message ->
+                            if (success) {
                                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+
+                                val intent = Intent(context, DashboardActivity::class.java)
+                                context.startActivity(intent)
                                 activity.finish()
-                            }else{
+
+                            } else {
                                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                             }
                         }
                     },
+
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 20.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = ForestGreen)) {
-                    Text("Log in",
-                        style = TextStyle(fontSize = 22.sp,
-                            fontWeight = FontWeight.ExtraBold))
+                        .padding(horizontal = 20.dp)
+                        .height(52.dp)
+                        .testTag("login"),
+
+                    colors = ButtonDefaults.buttonColors(containerColor = ForestGreen),
+
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(
+                        "Log in",
+                        style = TextStyle(
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                    )
                 }
 
                 Row(modifier = Modifier.fillMaxWidth(),

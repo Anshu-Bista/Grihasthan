@@ -23,8 +23,18 @@ val Gold = Color(0xFFD4A017)
 
 val MintGreen = Color(0xFFE8F5E9)
 
+val SoftOlive = Color(0xFF7DA37D)
+
+val DarkGreen = Color(0xFF2E7D32)
+
 val ForestGreen = Color(0xFF1B5E20)
 
 val DarkGrey = Color(0xFF767879)
 
 val Dark = Color(0xFF000000)
+
+val SoftPurple = Color(0xFFE0DEF7)
+
+val PrimaryPurple = Color(0xFF7065F0)
+
+val RedColor = Color(0xFFC62828)

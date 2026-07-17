@@ -4,4 +4,7 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_dashboard">DashboardActivity</string>
     <string name="title_activity_loginn">LoginnActivity</string>
+    <string name="title_activity_add">AddActivity</string>
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="title_activity_detail">DetailActivity</string>
 </resources>
